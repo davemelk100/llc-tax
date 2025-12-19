@@ -73,22 +73,53 @@
         <div v-if="showEditDialog" class="modal-overlay" @click="closeEditDialog">
           <div class="modal-content" @click.stop>
             <div class="modal-header">
-              <h2>Edit Document</h2>
+              <h2>Manage Documents</h2>
               <button @click="closeEditDialog" class="close-btn">&times;</button>
             </div>
             <div class="modal-body">
               <div class="form-group">
-                <label>Title</label>
+                <label>CATEGORY *</label>
+                <select v-model="editForm.category_id" class="form-input" disabled>
+                  <option v-for="cat in categories" :key="cat.id" :value="cat.id">
+                    {{ cat.name }}
+                  </option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>TITLE *</label>
                 <input v-model="editForm.title" type="text" class="form-input" />
               </div>
               <div class="form-group">
-                <label>Amount</label>
-                <input v-model.number="editForm.amount" type="number" step="0.01" class="form-input" />
+                <label>DESCRIPTION</label>
+                <textarea v-model="editForm.description" class="form-input form-textarea" rows="3"></textarea>
+              </div>
+              <div class="form-group">
+                <label>DOCUMENT TYPE *</label>
+                <select v-model="editForm.document_type" class="form-input">
+                  <option value="PDF">PDF</option>
+                  <option value="link">Link</option>
+                  <option value="image">Image</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>URL *</label>
+                <input v-model="editForm.url" type="text" class="form-input" />
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>AMOUNT</label>
+                  <input v-model.number="editForm.amount" type="number" step="0.01" class="form-input" />
+                </div>
+                <div class="form-group">
+                  <label>DATE</label>
+                  <input v-model="editForm.date" type="date" class="form-input" />
+                </div>
               </div>
             </div>
             <div class="modal-footer">
-              <button @click="closeEditDialog" class="cancel-btn">Cancel</button>
-              <button @click="saveEdit" class="save-btn">Save</button>
+              <button @click="closeEditDialog" class="cancel-btn">CANCEL</button>
+              <button @click="saveEdit" class="save-btn">UPDATE DOCUMENT</button>
             </div>
           </div>
         </div>
@@ -118,8 +149,13 @@ const passcodeError = ref('');
 const showEditDialog = ref(false);
 const editingDocument = ref<ExpenseDocument | null>(null);
 const editForm = ref({
+  category_id: '',
   title: '',
-  amount: 0
+  description: '',
+  document_type: '',
+  url: '',
+  amount: 0,
+  date: ''
 });
 
 const currentYear = new Date().getFullYear();
@@ -186,16 +222,26 @@ const loadData = async () => {
 
 const openEditDialog = (document: ExpenseDocument) => {
   editingDocument.value = document;
+  editForm.value.category_id = document.category_id;
   editForm.value.title = document.title;
+  editForm.value.description = document.description;
+  editForm.value.document_type = document.document_type;
+  editForm.value.url = document.url;
   editForm.value.amount = document.amount || 0;
+  editForm.value.date = document.date;
   showEditDialog.value = true;
 };
 
 const closeEditDialog = () => {
   showEditDialog.value = false;
   editingDocument.value = null;
+  editForm.value.category_id = '';
   editForm.value.title = '';
+  editForm.value.description = '';
+  editForm.value.document_type = '';
+  editForm.value.url = '';
   editForm.value.amount = 0;
+  editForm.value.date = '';
 };
 
 const saveEdit = async () => {
@@ -204,7 +250,11 @@ const saveEdit = async () => {
   try {
     await supabase.updateDocument(editingDocument.value.id, {
       title: editForm.value.title,
-      amount: editForm.value.amount
+      description: editForm.value.description,
+      document_type: editForm.value.document_type,
+      url: editForm.value.url,
+      amount: editForm.value.amount,
+      date: editForm.value.date
     });
     await loadData();
     closeEditDialog();
@@ -531,35 +581,37 @@ body::before {
 }
 
 .modal-content {
-  background: white;
+  background: #fef8e7;
   border-radius: 16px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  max-width: 500px;
+  max-width: 600px;
   width: 100%;
   overflow: hidden;
+  border: 3px solid #d4a017;
 }
 
 .modal-header {
   padding: 1.5rem 2rem;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: none;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: linear-gradient(135deg, #5691c4 0%, #3d6f9e 100%);
-  color: white;
+  background: transparent;
+  color: #333;
 }
 
 .modal-header h2 {
   margin: 0;
   font-size: 1.5rem;
-  font-weight: 600;
+  font-weight: 700;
+  color: #333;
 }
 
 .close-btn {
   background: transparent;
   border: none;
   font-size: 2rem;
-  color: white;
+  color: #666;
   cursor: pointer;
   padding: 0;
   width: 32px;
@@ -572,7 +624,7 @@ body::before {
 }
 
 .close-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.1);
 }
 
 .modal-body {
@@ -590,9 +642,9 @@ body::before {
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
-  font-weight: 600;
-  color: #3d6f9e;
-  font-size: 0.9rem;
+  font-weight: 700;
+  color: #333;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -600,11 +652,12 @@ body::before {
 .form-input {
   width: 100%;
   padding: 0.75rem 1rem;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
   font-size: 1rem;
   font-family: 'Roboto', sans-serif;
   transition: border-color 0.2s;
+  background: white;
 }
 
 .form-input:focus {
@@ -612,13 +665,24 @@ body::before {
   border-color: #5691c4;
 }
 
+.form-textarea {
+  resize: vertical;
+  font-family: 'Roboto', sans-serif;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
 .modal-footer {
   padding: 1.5rem 2rem;
-  border-top: 1px solid #e0e0e0;
+  border-top: none;
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
-  background: #f5f5f5;
+  background: transparent;
 }
 
 .cancel-btn,
@@ -635,22 +699,21 @@ body::before {
 }
 
 .cancel-btn {
-  background: white;
-  color: #666;
-  border: 2px solid #e0e0e0;
+  background: #999;
+  color: white;
 }
 
 .cancel-btn:hover {
-  background: #f5f5f5;
-  border-color: #ccc;
+  background: #777;
 }
 
 .save-btn {
-  background: linear-gradient(135deg, #5691c4 0%, #3d6f9e 100%);
+  background: #5691c4;
   color: white;
 }
 
 .save-btn:hover {
+  background: #3d6f9e;
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(86, 145, 196, 0.4);
 }
