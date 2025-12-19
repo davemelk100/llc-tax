@@ -17,64 +17,58 @@
     </div>
 
     <template v-else>
-      <header class="app-header">
-        <div class="header-content">
-          <h1>Melkonian Industries LLC</h1>
-        </div>
-      </header>
-
-      <main class="app-main">
-      <div v-if="loading" class="loading-state">
-        <div class="spinner"></div>
-        <p>Loading expense data...</p>
-      </div>
-
-      <div v-else-if="error" class="error-state">
-        <p>{{ error }}</p>
-        <button @click="loadData" class="retry-btn">Retry</button>
-      </div>
-
-      <div v-else class="expenses-grid">
-        <ExpenseCard
-          v-for="category in sortedCategories"
-          :key="category.id"
-          :category="category"
-          :documents="getDocumentsForCategory(category.id)"
-        />
-      </div>
-
-      <div v-if="!loading && !error" class="totals-card">
-        <div class="totals-content">
-          <h2>Total Expenses</h2>
-          <div class="totals-amount">${{ totalAmount.toFixed(2) }}</div>
-          <div class="totals-meta">
-            <span>{{ totalDocuments }} {{ totalDocuments === 1 ? 'document' : 'documents' }}</span>
-            <span class="separator">•</span>
-            <span>{{ categories.length }} {{ categories.length === 1 ? 'category' : 'categories' }}</span>
-          </div>
-        </div>
-      </div>
-    </main>
-
-    <footer class="app-footer">
-      <p>&copy; {{ currentYear }} Melkonian Industries LLC. All rights reserved.</p>
-    </footer>
-
-    <Transition name="slide">
       <AdminPanel
         v-if="showAdmin"
         @close="showAdmin = false"
         @updated="loadData"
       />
-    </Transition>
 
-    <div
-      v-if="showAdmin"
-      class="overlay"
-      @click="showAdmin = false"
-    ></div>
+      <template v-else>
+        <header class="app-header">
+          <div class="header-content">
+            <h1>Melkonian Industries LLC</h1>
+          </div>
+        </header>
 
-      <a href="#" @click.prevent="showAdmin = true" class="admin-link">A</a>
+        <main class="app-main">
+        <div v-if="loading" class="loading-state">
+          <div class="spinner"></div>
+          <p>Loading expense data...</p>
+        </div>
+
+        <div v-else-if="error" class="error-state">
+          <p>{{ error }}</p>
+          <button @click="loadData" class="retry-btn">Retry</button>
+        </div>
+
+        <div v-else class="expenses-grid">
+          <ExpenseCard
+            v-for="category in sortedCategories"
+            :key="category.id"
+            :category="category"
+            :documents="getDocumentsForCategory(category.id)"
+          />
+        </div>
+
+        <div v-if="!loading && !error" class="totals-card">
+          <div class="totals-content">
+            <h2>Total Expenses</h2>
+            <div class="totals-amount">${{ totalAmount.toFixed(2) }}</div>
+            <div class="totals-meta">
+              <span>{{ totalDocuments }} {{ totalDocuments === 1 ? 'document' : 'documents' }}</span>
+              <span class="separator">•</span>
+              <span>{{ categories.length }} {{ categories.length === 1 ? 'category' : 'categories' }}</span>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <footer class="app-footer">
+        <p>&copy; {{ currentYear }} Melkonian Industries LLC. All rights reserved.</p>
+      </footer>
+
+        <a href="#" @click.prevent="showAdmin = true" class="admin-link">A</a>
+      </template>
     </template>
   </div>
 </template>
@@ -446,33 +440,9 @@ body::before {
   margin-top: 2rem;
 }
 
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 999;
-}
-
-.slide-enter-active,
-.slide-leave-active {
-  transition: transform 0.3s ease;
-}
-
-.slide-enter-from,
-.slide-leave-to {
-  transform: translateX(100%);
-}
-
 @media (max-width: 768px) {
   .expenses-grid {
     grid-template-columns: 1fr;
-  }
-
-  .admin-panel {
-    width: 100vw;
   }
 }
 </style>
