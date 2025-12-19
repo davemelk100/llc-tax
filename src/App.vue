@@ -560,6 +560,7 @@ body::before {
   text-transform: uppercase;
   color: #6395c1;
   text-shadow: rgba(99, 149, 193, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(99, 149, 193, 0.5) 0px 0px 1px;
+  font-size: 1.2rem;
 }
 
 @media (max-width: 768px) {
