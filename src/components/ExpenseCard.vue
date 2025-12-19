@@ -136,6 +136,7 @@ const formatDate = (dateString: string): string => {
   font-weight: 600;
   position: relative;
   z-index: 1;
+  color: #ffffff;
 }
 
 .description {
@@ -144,6 +145,7 @@ const formatDate = (dateString: string): string => {
   font-size: 0.9rem;
   position: relative;
   z-index: 1;
+  color: #ffffff;
 }
 
 .card-body {
