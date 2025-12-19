@@ -160,15 +160,15 @@ defineProps<{
 
 .document-info h3 {
   margin: 0;
-  font-size: 0.5rem;
+  font-size: 14px;
   font-weight: 300;
   color: #000000;
   line-height: 1.3;
 }
 
 .doc-amount {
-  font-weight: 300;
-  font-size: 0.5rem;
+  font-weight: 700;
+  font-size: 14px;
   color: #000000;
   margin-right: 1rem;
   white-space: nowrap;
