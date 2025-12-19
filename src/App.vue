@@ -217,9 +217,6 @@ body::before {
   margin: 0;
   font-size: 48px;
   color: #f0f0f0;
-  background: #e0e0e0;
-  padding: 15px 50px;
-  border-radius: 15px;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
