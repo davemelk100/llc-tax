@@ -15,8 +15,6 @@
             <p v-if="doc.description" class="doc-description">{{ doc.description }}</p>
             <div class="doc-meta">
               <span v-if="doc.amount" class="doc-amount">${{ doc.amount.toFixed(2) }}</span>
-              <span v-if="doc.amount" class="doc-separator">•</span>
-              <span class="doc-date">{{ formatDate(doc.date) }}</span>
             </div>
           </div>
           <div class="icon-actions">
@@ -48,15 +46,6 @@ defineProps<{
   category: ExpenseCategory;
   documents: ExpenseDocument[];
 }>();
-
-const formatDate = (dateString: string): string => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric'
-  });
-};
 </script>
 
 <style scoped>
