@@ -47,6 +47,7 @@
             :key="category.id"
             :category="category"
             :documents="getDocumentsForCategory(category.id)"
+            @edit-document="openEditDialog"
           />
         </div>
 
@@ -68,6 +69,29 @@
       </footer>
 
         <a href="#" @click.prevent="showAdmin = true" class="admin-link">A</a>
+
+        <div v-if="showEditDialog" class="modal-overlay" @click="closeEditDialog">
+          <div class="modal-content" @click.stop>
+            <div class="modal-header">
+              <h2>Edit Document</h2>
+              <button @click="closeEditDialog" class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+                <label>Title</label>
+                <input v-model="editForm.title" type="text" class="form-input" />
+              </div>
+              <div class="form-group">
+                <label>Amount</label>
+                <input v-model.number="editForm.amount" type="number" step="0.01" class="form-input" />
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button @click="closeEditDialog" class="cancel-btn">Cancel</button>
+              <button @click="saveEdit" class="save-btn">Save</button>
+            </div>
+          </div>
+        </div>
       </template>
     </template>
   </div>
@@ -91,6 +115,12 @@ const showAdmin = ref(false);
 const isAuthenticated = ref(false);
 const passcodeInput = ref('');
 const passcodeError = ref('');
+const showEditDialog = ref(false);
+const editingDocument = ref<ExpenseDocument | null>(null);
+const editForm = ref({
+  title: '',
+  amount: 0
+});
 
 const currentYear = new Date().getFullYear();
 
@@ -151,6 +181,35 @@ const loadData = async () => {
     error.value = e.message || 'Failed to load data from database.';
   } finally {
     loading.value = false;
+  }
+};
+
+const openEditDialog = (document: ExpenseDocument) => {
+  editingDocument.value = document;
+  editForm.value.title = document.title;
+  editForm.value.amount = document.amount || 0;
+  showEditDialog.value = true;
+};
+
+const closeEditDialog = () => {
+  showEditDialog.value = false;
+  editingDocument.value = null;
+  editForm.value.title = '';
+  editForm.value.amount = 0;
+};
+
+const saveEdit = async () => {
+  if (!editingDocument.value) return;
+
+  try {
+    await supabase.updateDocument(editingDocument.value.id, {
+      title: editForm.value.title,
+      amount: editForm.value.amount
+    });
+    await loadData();
+    closeEditDialog();
+  } catch (e: any) {
+    alert('Failed to update document: ' + (e.message || 'Unknown error'));
   }
 };
 
@@ -454,5 +513,145 @@ body::before {
   .expenses-grid {
     grid-template-columns: 1fr;
   }
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 1rem;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  max-width: 500px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.modal-header {
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #5691c4 0%, #3d6f9e 100%);
+  color: white;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  font-size: 2rem;
+  color: white;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+
+.close-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.modal-body {
+  padding: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group:last-child {
+  margin-bottom: 0;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #3d6f9e;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: 'Roboto', sans-serif;
+  transition: border-color 0.2s;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #5691c4;
+}
+
+.modal-footer {
+  padding: 1.5rem 2rem;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  background: #f5f5f5;
+}
+
+.cancel-btn,
+.save-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: 'Roboto', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
+}
+
+.cancel-btn {
+  background: white;
+  color: #666;
+  border: 2px solid #e0e0e0;
+}
+
+.cancel-btn:hover {
+  background: #f5f5f5;
+  border-color: #ccc;
+}
+
+.save-btn {
+  background: linear-gradient(135deg, #5691c4 0%, #3d6f9e 100%);
+  color: white;
+}
+
+.save-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(86, 145, 196, 0.4);
 }
 </style>
