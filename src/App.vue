@@ -42,6 +42,18 @@
           :documents="getDocumentsForCategory(category.id)"
         />
       </div>
+
+      <div v-if="!loading && !error" class="totals-card">
+        <div class="totals-content">
+          <h2>Total Expenses</h2>
+          <div class="totals-amount">${{ totalAmount.toFixed(2) }}</div>
+          <div class="totals-meta">
+            <span>{{ totalDocuments }} {{ totalDocuments === 1 ? 'document' : 'documents' }}</span>
+            <span class="separator">•</span>
+            <span>{{ categories.length }} {{ categories.length === 1 ? 'category' : 'categories' }}</span>
+          </div>
+        </div>
+      </div>
     </main>
 
     <footer class="app-footer">
@@ -124,6 +136,14 @@ const sortedCategories = computed(() => {
 const getDocumentsForCategory = (categoryId: string): ExpenseDocument[] => {
   return documents.value.filter((doc) => doc.category_id === categoryId);
 };
+
+const totalAmount = computed(() => {
+  return documents.value.reduce((sum, doc) => sum + (doc.amount || 0), 0);
+});
+
+const totalDocuments = computed(() => {
+  return documents.value.length;
+});
 
 const loadData = async () => {
   loading.value = true;
@@ -366,6 +386,55 @@ body::before {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
   gap: 2rem;
+}
+
+.totals-card {
+  margin-top: 3rem;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15),
+              inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  overflow: hidden;
+}
+
+.totals-content {
+  padding: 2.5rem;
+  text-align: center;
+  position: relative;
+}
+
+.totals-content h2 {
+  margin: 0 0 1.5rem 0;
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.totals-amount {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.totals-meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+}
+
+.totals-meta .separator {
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 700;
 }
 
 .app-footer {
