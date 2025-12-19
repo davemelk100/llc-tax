@@ -1,12 +1,29 @@
 <template>
   <div class="app">
-    <header class="app-header">
-      <div class="header-content">
-        <h1>Melkonian Industries LLC</h1>
+    <div v-if="!isAuthenticated" class="passcode-screen">
+      <div class="passcode-card">
+        <h2>Enter Passcode</h2>
+        <input
+          v-model="passcodeInput"
+          type="password"
+          placeholder="Enter passcode"
+          @keyup.enter="checkPasscode"
+          class="passcode-input"
+          autofocus
+        />
+        <p v-if="passcodeError" class="passcode-error">{{ passcodeError }}</p>
+        <button @click="checkPasscode" class="passcode-btn">Submit</button>
       </div>
-    </header>
+    </div>
 
-    <main class="app-main">
+    <template v-else>
+      <header class="app-header">
+        <div class="header-content">
+          <h1>Melkonian Industries LLC</h1>
+        </div>
+      </header>
+
+      <main class="app-main">
       <div v-if="loading" class="loading-state">
         <div class="spinner"></div>
         <p>Loading expense data...</p>
@@ -45,7 +62,8 @@
       @click="showAdmin = false"
     ></div>
 
-    <a href="#" @click.prevent="showAdmin = true" class="admin-link">A</a>
+      <a href="#" @click.prevent="showAdmin = true" class="admin-link">A</a>
+    </template>
   </div>
 </template>
 
@@ -55,14 +73,49 @@ import ExpenseCard from './components/ExpenseCard.vue';
 import AdminPanel from './components/admin/AdminPanel.vue';
 import { useSupabase, type ExpenseCategory, type ExpenseDocument } from './composables/useSupabase';
 
+const CORRECT_PASSCODE = '6231839';
+const AUTH_KEY = 'melkonian_auth';
+
 const supabase = useSupabase();
 const categories = ref<ExpenseCategory[]>([]);
 const documents = ref<ExpenseDocument[]>([]);
 const loading = ref(false);
 const error = ref('');
 const showAdmin = ref(false);
+const isAuthenticated = ref(false);
+const passcodeInput = ref('');
+const passcodeError = ref('');
 
 const currentYear = new Date().getFullYear();
+
+const checkExistingAuth = () => {
+  const authData = localStorage.getItem(AUTH_KEY);
+  if (authData) {
+    const authDate = new Date(authData);
+    const today = new Date();
+    if (
+      authDate.getFullYear() === today.getFullYear() &&
+      authDate.getMonth() === today.getMonth() &&
+      authDate.getDate() === today.getDate()
+    ) {
+      isAuthenticated.value = true;
+      return;
+    }
+  }
+  isAuthenticated.value = false;
+};
+
+const checkPasscode = () => {
+  if (passcodeInput.value === CORRECT_PASSCODE) {
+    isAuthenticated.value = true;
+    passcodeError.value = '';
+    localStorage.setItem(AUTH_KEY, new Date().toISOString());
+    loadData();
+  } else {
+    passcodeError.value = 'Incorrect passcode';
+    passcodeInput.value = '';
+  }
+};
 
 const sortedCategories = computed(() => {
   return [...categories.value].sort((a, b) => a.display_order - b.display_order);
@@ -88,7 +141,10 @@ const loadData = async () => {
 };
 
 onMounted(() => {
-  loadData();
+  checkExistingAuth();
+  if (isAuthenticated.value) {
+    loadData();
+  }
 });
 </script>
 
@@ -172,6 +228,74 @@ body::before {
 
 .admin-link:hover {
   color: rgba(255, 255, 255, 0.9);
+}
+
+.passcode-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.passcode-card {
+  background: white;
+  border-radius: 16px;
+  padding: 3rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.passcode-card h2 {
+  margin-bottom: 2rem;
+  color: #3d6f9e;
+  font-size: 1.75rem;
+}
+
+.passcode-input {
+  width: 100%;
+  padding: 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1.125rem;
+  font-family: 'Roboto', sans-serif;
+  transition: border-color 0.2s;
+  text-align: center;
+  letter-spacing: 0.25rem;
+}
+
+.passcode-input:focus {
+  outline: none;
+  border-color: #5691c4;
+}
+
+.passcode-error {
+  color: #d32f2f;
+  margin-top: 1rem;
+  font-size: 0.875rem;
+}
+
+.passcode-btn {
+  width: 100%;
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, #5691c4 0%, #3d6f9e 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.125rem;
+  font-weight: 600;
+  font-family: 'Roboto', sans-serif;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  text-transform: uppercase;
+}
+
+.passcode-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(86, 145, 196, 0.4);
 }
 
 .app-main {
