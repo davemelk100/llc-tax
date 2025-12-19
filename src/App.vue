@@ -171,7 +171,7 @@ onMounted(() => {
 
 body {
   font-family: 'Roboto', sans-serif;
-  background: #5691c4;
+  background: #6394c1;
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
@@ -215,7 +215,7 @@ body::before {
 .app-header {
   position: sticky;
   top: 0;
-  background: #6395c1;
+  background: #6394c1;
   opacity: 1;
   padding: 0.5rem;
   z-index: 100;
