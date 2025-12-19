@@ -160,8 +160,8 @@ defineProps<{
 
 .document-info h3 {
   margin: 0;
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: 1.5rem;
+  font-weight: 300;
   color: #000000;
   line-height: 1.3;
 }
