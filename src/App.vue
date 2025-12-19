@@ -218,6 +218,7 @@ body::before {
   font-size: 48px;
   color: #f0f0f0;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  text-transform: uppercase;
 }
 
 .admin-link {
