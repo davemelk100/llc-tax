@@ -12,7 +12,6 @@
         <div v-for="doc in documents" :key="doc.id" class="document-item">
           <div class="document-info">
             <h3>{{ doc.title }}</h3>
-            <p v-if="doc.description" class="doc-description">{{ doc.description }}</p>
             <div class="doc-meta">
               <span v-if="doc.amount" class="doc-amount">${{ doc.amount.toFixed(2) }}</span>
             </div>
