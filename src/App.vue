@@ -438,9 +438,16 @@ body::before {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   color: white;
-  text-align: center;
   padding: 1.5rem;
   margin-top: 2rem;
+}
+
+.app-footer p {
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 2rem;
+  text-align: left;
 }
 
 @media (max-width: 768px) {
