@@ -129,7 +129,7 @@ defineProps<{
 .no-documents {
   text-align: center;
   padding: 2rem;
-  color: #000000;
+  color: #ffffff;
   font-style: italic;
 }
 
