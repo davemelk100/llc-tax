@@ -184,21 +184,17 @@ defineProps<{
   align-items: center;
   justify-content: center;
   padding: 0.65rem;
-  background: rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: transparent;
   color: #000000;
   text-decoration: none;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  border: none;
   transition: all 0.2s ease;
   cursor: pointer;
 }
 
 .icon-btn:hover {
-  background: rgba(74, 139, 184, 0.5);
-  color: #ffffff;
+  color: rgba(74, 139, 184, 1);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 </style>
