@@ -240,7 +240,7 @@ const formatDate = (dateString: string): string => {
   text-decoration: none;
   border-radius: 8px;
   font-weight: 600;
-  font-family: 'Nunito', sans-serif;
+  font-family: 'Roboto Serif', serif;
   transition: all 0.3s ease;
   white-space: nowrap;
   border: 1px solid rgba(255, 255, 255, 0.4);
