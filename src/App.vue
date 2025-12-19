@@ -231,7 +231,7 @@ body::before {
   margin: 0;
   font-size: 48px;
   color: #f0f0f0;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  text-shadow: rgba(240, 240, 240, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(240, 240, 240, 0.5) 0px 0px 1px;
   text-transform: uppercase;
 }
 
