@@ -215,7 +215,7 @@ body::before {
 .app-header {
   position: sticky;
   top: 0;
-  background: linear-gradient(135deg, #5691c4 0%, #3d6f9e 100%);
+  background: #6395c1;
   opacity: 1;
   padding: 0.5rem;
   z-index: 100;
@@ -229,8 +229,8 @@ body::before {
   display: inline-block;
   margin: 0;
   font-size: 48px;
-  color: #ffffff;
-  text-shadow: rgba(0, 0, 0, 0.3) 2px 2px 4px;
+  color: #6395c1;
+  text-shadow: rgba(99, 149, 193, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(99, 149, 193, 0.5) 0px 0px 1px;
   text-transform: uppercase;
 }
 
