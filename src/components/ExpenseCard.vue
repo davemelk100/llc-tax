@@ -14,7 +14,6 @@
             <h3>{{ doc.title }}</h3>
             <p v-if="doc.description" class="doc-description">{{ doc.description }}</p>
             <div class="doc-meta">
-              <span class="doc-type">{{ formatDocType(doc.document_type) }}</span>
               <span v-if="doc.amount" class="doc-amount">${{ doc.amount.toFixed(2) }}</span>
               <span class="doc-date">{{ formatDate(doc.date) }}</span>
             </div>
@@ -35,10 +34,6 @@ defineProps<{
   category: ExpenseCategory;
   documents: ExpenseDocument[];
 }>();
-
-const formatDocType = (type: string): string => {
-  return type.toUpperCase();
-};
 
 const formatDate = (dateString: string): string => {
   const date = new Date(dateString);
@@ -209,20 +204,6 @@ const formatDate = (dateString: string): string => {
   gap: 1rem;
   font-size: 0.85rem;
   color: #000000;
-}
-
-.doc-type {
-  background: rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  color: #000000;
-  padding: 0.25rem 0.6rem;
-  border-radius: 6px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
 
 .doc-amount {
