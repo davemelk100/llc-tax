@@ -440,7 +440,7 @@ onMounted(async () => {
   border: none;
   border-radius: 6px;
   font-weight: 500;
-  font-family: 'Roboto Serif', serif;
+  font-family: 'Roboto', sans-serif;
   cursor: pointer;
   transition: background 0.2s;
 }
@@ -456,7 +456,7 @@ onMounted(async () => {
   border: none;
   border-radius: 6px;
   font-weight: 500;
-  font-family: 'Roboto Serif', serif;
+  font-family: 'Roboto', sans-serif;
   cursor: pointer;
   transition: background 0.2s;
 }
@@ -585,7 +585,7 @@ onMounted(async () => {
   border-radius: 4px;
   font-size: 0.9rem;
   font-weight: 500;
-  font-family: 'Roboto Serif', serif;
+  font-family: 'Roboto', sans-serif;
   cursor: pointer;
   text-decoration: none;
   text-align: center;

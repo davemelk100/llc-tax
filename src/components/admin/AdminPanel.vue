@@ -74,7 +74,7 @@ const activeTab = ref<'categories' | 'documents'>('categories');
   border: none;
   color: white;
   font-size: 1.5rem;
-  font-family: 'Roboto Serif', serif;
+  font-family: 'Roboto', sans-serif;
   cursor: pointer;
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
@@ -99,7 +99,7 @@ const activeTab = ref<'categories' | 'documents'>('categories');
   cursor: pointer;
   font-size: 1rem;
   font-weight: 500;
-  font-family: 'Roboto Serif', serif;
+  font-family: 'Roboto', sans-serif;
   color: #6c757d;
   transition: all 0.2s;
 }

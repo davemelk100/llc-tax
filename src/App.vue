@@ -102,7 +102,7 @@ onMounted(() => {
 }
 
 body {
-  font-family: 'Roboto Serif', serif;
+  font-family: 'Roboto', sans-serif;
   background: linear-gradient(135deg, #5691c4 0%, #3d6f9e 100%);
   min-height: 100vh;
   position: relative;
@@ -177,7 +177,7 @@ body::before {
   border-radius: 8px;
   font-size: 1rem;
   font-weight: 600;
-  font-family: 'Roboto Serif', serif;
+  font-family: 'Roboto', sans-serif;
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
   white-space: nowrap;
@@ -236,7 +236,7 @@ body::before {
   border-radius: 8px;
   font-size: 1rem;
   font-weight: 600;
-  font-family: 'Roboto Serif', serif;
+  font-family: 'Roboto', sans-serif;
   cursor: pointer;
   transition: transform 0.2s;
 }
