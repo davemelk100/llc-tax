@@ -208,11 +208,18 @@ body::before {
   z-index: 100;
 }
 
+.header-content {
+  text-align: center;
+}
+
 .header-content h1 {
+  display: inline-block;
   margin: 0;
   font-size: 48px;
-  color: rgb(240, 240, 240);
-  text-shadow: rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px;
+  color: #3d6f9e;
+  background: #e0e0e0;
+  padding: 15px 50px;
+  border-radius: 15px;
 }
 
 .admin-link {
