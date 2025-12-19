@@ -2,7 +2,7 @@
   <div class="document-manager">
     <h2>Manage Documents</h2>
 
-    <form @submit.prevent="handleSubmit" class="document-form">
+    <form @submit.prevent="handleSubmit" class="document-form" :class="{ editing: editingId }">
       <div class="form-group">
         <label>Category *</label>
         <select v-model="form.categoryId" required>
@@ -273,6 +273,7 @@ const handleSubmit = async () => {
 
 const editDocument = (doc: ExpenseDocument) => {
   editingId.value = doc.id;
+  uploadMode.value = 'url';
   form.value = {
     categoryId: doc.category_id,
     title: doc.title,
@@ -282,6 +283,7 @@ const editDocument = (doc: ExpenseDocument) => {
     amount: doc.amount,
     date: doc.date,
   };
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
 const deleteDocument = async (id: string) => {
@@ -351,6 +353,13 @@ onMounted(async () => {
   padding: 1.5rem;
   border-radius: 8px;
   margin-bottom: 2rem;
+  transition: all 0.3s;
+}
+
+.document-form.editing {
+  background: #fff8e1;
+  border: 2px solid #ffc107;
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.2);
 }
 
 .form-group {

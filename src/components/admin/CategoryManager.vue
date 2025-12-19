@@ -2,7 +2,7 @@
   <div class="category-manager">
     <h2>Manage Categories</h2>
 
-    <form @submit.prevent="handleSubmit" class="category-form">
+    <form @submit.prevent="handleSubmit" class="category-form" :class="{ editing: editingId }">
       <div class="form-group">
         <label>Category Name *</label>
         <input
@@ -143,6 +143,7 @@ const editCategory = (category: ExpenseCategory) => {
     description: category.description || '',
     displayOrder: category.display_order,
   };
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
 const deleteCategory = async (id: string) => {
@@ -187,6 +188,13 @@ onMounted(() => {
   padding: 1.5rem;
   border-radius: 8px;
   margin-bottom: 2rem;
+  transition: all 0.3s;
+}
+
+.category-form.editing {
+  background: #fff8e1;
+  border: 2px solid #ffc107;
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.2);
 }
 
 .form-group {
