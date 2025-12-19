@@ -1,0 +1,20 @@
+{
+  "name": "melkonian-tax-docs",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.3",
+    "vue": "^3.4.21"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.4",
+    "typescript": "^5.7.2",
+    "vite": "^5.4.21",
+    "vue-tsc": "^2.1.10"
+  }
+}
