@@ -443,6 +443,7 @@ onMounted(async () => {
   font-family: 'Roboto', sans-serif;
   cursor: pointer;
   transition: background 0.2s;
+  text-transform: uppercase;
 }
 
 .btn-primary:hover {
@@ -459,6 +460,7 @@ onMounted(async () => {
   font-family: 'Roboto', sans-serif;
   cursor: pointer;
   transition: background 0.2s;
+  text-transform: uppercase;
 }
 
 .btn-secondary:hover {
@@ -590,6 +592,7 @@ onMounted(async () => {
   text-decoration: none;
   text-align: center;
   transition: all 0.2s;
+  text-transform: uppercase;
 }
 
 .btn-view {

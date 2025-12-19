@@ -232,6 +232,7 @@ onMounted(() => {
   font-family: 'Roboto', sans-serif;
   cursor: pointer;
   transition: background 0.2s;
+  text-transform: uppercase;
 }
 
 .btn-primary:hover {
@@ -248,6 +249,7 @@ onMounted(() => {
   font-family: 'Roboto', sans-serif;
   cursor: pointer;
   transition: background 0.2s;
+  text-transform: uppercase;
 }
 
 .btn-secondary:hover {
@@ -325,6 +327,7 @@ onMounted(() => {
   font-family: 'Roboto', sans-serif;
   cursor: pointer;
   transition: all 0.2s;
+  text-transform: uppercase;
 }
 
 .btn-edit {

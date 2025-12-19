@@ -79,6 +79,7 @@ const activeTab = ref<'categories' | 'documents'>('categories');
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
   transition: background 0.2s;
+  text-transform: uppercase;
 }
 
 .close-btn:hover {
@@ -102,6 +103,7 @@ const activeTab = ref<'categories' | 'documents'>('categories');
   font-family: 'Roboto', sans-serif;
   color: #6c757d;
   transition: all 0.2s;
+  text-transform: uppercase;
 }
 
 .admin-tabs button.active {

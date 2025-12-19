@@ -172,6 +172,7 @@ body::before {
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
   white-space: nowrap;
+  text-transform: uppercase;
 }
 
 .admin-btn:hover {
@@ -230,6 +231,7 @@ body::before {
   font-family: 'Roboto', sans-serif;
   cursor: pointer;
   transition: transform 0.2s;
+  text-transform: uppercase;
 }
 
 .retry-btn:hover {

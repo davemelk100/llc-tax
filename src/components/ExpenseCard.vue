@@ -188,5 +188,6 @@ const formatDate = (dateString: string): string => {
   font-family: 'Roboto', sans-serif;
   white-space: nowrap;
   border: 1px solid rgba(255, 255, 255, 0.4);
+  text-transform: uppercase;
 }
 </style>
