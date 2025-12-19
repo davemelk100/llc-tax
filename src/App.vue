@@ -581,37 +581,37 @@ body::before {
 }
 
 .modal-content {
-  background: #fef8e7;
+  background: white;
   border-radius: 16px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   max-width: 600px;
   width: 100%;
   overflow: hidden;
-  border: 3px solid #d4a017;
+  border: 2px solid rgba(86, 145, 196, 0.3);
 }
 
 .modal-header {
   padding: 1.5rem 2rem;
-  border-bottom: none;
+  border-bottom: 1px solid #e0e0e0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: transparent;
-  color: #333;
+  background: linear-gradient(135deg, #5691c4 0%, #3d6f9e 100%);
+  color: white;
 }
 
 .modal-header h2 {
   margin: 0;
   font-size: 1.5rem;
   font-weight: 700;
-  color: #333;
+  color: white;
 }
 
 .close-btn {
   background: transparent;
   border: none;
   font-size: 2rem;
-  color: #666;
+  color: white;
   cursor: pointer;
   padding: 0;
   width: 32px;
@@ -624,7 +624,7 @@ body::before {
 }
 
 .close-btn:hover {
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .modal-body {
@@ -643,7 +643,7 @@ body::before {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 700;
-  color: #333;
+  color: #3d6f9e;
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -652,8 +652,8 @@ body::before {
 .form-input {
   width: 100%;
   padding: 0.75rem 1rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
   font-size: 1rem;
   font-family: 'Roboto', sans-serif;
   transition: border-color 0.2s;
@@ -678,11 +678,11 @@ body::before {
 
 .modal-footer {
   padding: 1.5rem 2rem;
-  border-top: none;
+  border-top: 1px solid #e0e0e0;
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
-  background: transparent;
+  background: #f5f5f5;
 }
 
 .cancel-btn,
@@ -699,21 +699,22 @@ body::before {
 }
 
 .cancel-btn {
-  background: #999;
-  color: white;
+  background: white;
+  color: #666;
+  border: 2px solid #e0e0e0;
 }
 
 .cancel-btn:hover {
-  background: #777;
+  background: #f5f5f5;
+  border-color: #ccc;
 }
 
 .save-btn {
-  background: #5691c4;
+  background: linear-gradient(135deg, #5691c4 0%, #3d6f9e 100%);
   color: white;
 }
 
 .save-btn:hover {
-  background: #3d6f9e;
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(86, 145, 196, 0.4);
 }
