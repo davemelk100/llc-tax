@@ -215,7 +215,7 @@ body::before {
 .app-header {
   position: sticky;
   top: 0;
-  background: #f0f0f0;
+  background: #6395c1;
   opacity: 1;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding: 0.5rem;
@@ -230,8 +230,8 @@ body::before {
   display: inline-block;
   margin: 0;
   font-size: 48px;
-  color: #f0f0f0;
-  text-shadow: rgba(240, 240, 240, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(240, 240, 240, 0.5) 0px 0px 1px;
+  color: #6395c1;
+  text-shadow: rgba(99, 149, 193, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(99, 149, 193, 0.5) 0px 0px 1px;
   text-transform: uppercase;
 }
 
