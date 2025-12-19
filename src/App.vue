@@ -394,7 +394,7 @@ body::before {
 
 .totals-content {
   padding: 2.5rem;
-  text-align: center;
+  text-align: left;
   position: relative;
 }
 
@@ -418,7 +418,7 @@ body::before {
 .totals-meta {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 1rem;
   font-size: 1rem;
   color: rgba(255, 255, 255, 0.9);
