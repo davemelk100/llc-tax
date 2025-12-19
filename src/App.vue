@@ -3,7 +3,6 @@
     <header class="app-header">
       <div class="header-content">
         <h1>Melkonian Industries LLC</h1>
-        <p class="subtitle">Tax Documentation & Expense Tracking</p>
       </div>
       <button @click="showAdmin = true" class="admin-btn">
         Admin Panel
@@ -159,12 +158,6 @@ body::before {
   font-size: 48px;
   color: rgb(240, 240, 240);
   text-shadow: rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px;
-}
-
-.subtitle {
-  margin: 0.5rem 0 0 0;
-  color: #6c757d;
-  font-size: 1rem;
 }
 
 .admin-btn {
