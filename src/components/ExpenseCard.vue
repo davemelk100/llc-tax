@@ -19,9 +19,22 @@
               <span class="doc-date">{{ formatDate(doc.date) }}</span>
             </div>
           </div>
-          <a :href="doc.url" target="_blank" rel="noopener noreferrer" class="view-link">
-            {{ doc.document_type === 'pdf' ? 'View PDF' : 'Open Link' }}
-          </a>
+          <div class="icon-actions">
+            <a :href="doc.url" target="_blank" rel="noopener noreferrer" class="icon-btn" title="Open in new window">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <line x1="10" y1="14" x2="21" y2="3"></line>
+              </svg>
+            </a>
+            <a :href="doc.url" :download="doc.title" class="icon-btn" title="Download">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -193,18 +206,31 @@ const formatDate = (dateString: string): string => {
   font-weight: 700;
 }
 
-.view-link {
-  padding: 0.65rem 1.25rem;
+.icon-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem;
   background: rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   color: #000000;
   text-decoration: none;
   border-radius: 8px;
-  font-weight: 600;
-  font-family: 'Roboto', sans-serif;
-  white-space: nowrap;
   border: 1px solid rgba(255, 255, 255, 0.4);
-  text-transform: uppercase;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.icon-btn:hover {
+  background: rgba(74, 139, 184, 0.5);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 </style>
