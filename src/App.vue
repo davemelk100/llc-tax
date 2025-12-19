@@ -220,6 +220,7 @@ body::before {
   background: #e0e0e0;
   padding: 15px 50px;
   border-radius: 15px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .admin-link {
