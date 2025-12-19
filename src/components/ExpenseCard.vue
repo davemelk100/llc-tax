@@ -97,7 +97,7 @@ const formatDate = (dateString: string): string => {
   );
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  color: white;
+  color: #535658;
   padding: 1.5rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   position: relative;
@@ -155,7 +155,7 @@ const formatDate = (dateString: string): string => {
 .no-documents {
   text-align: center;
   padding: 2rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: #535658;
   font-style: italic;
 }
 
@@ -194,28 +194,28 @@ const formatDate = (dateString: string): string => {
   margin: 0 0 0.25rem 0;
   font-size: 1.1rem;
   font-weight: 600;
-  color: white;
+  color: #535658;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .doc-description {
   margin: 0 0 0.5rem 0;
   font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.85);
+  color: #535658;
 }
 
 .doc-meta {
   display: flex;
   gap: 1rem;
   font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: #535658;
 }
 
 .doc-type {
   background: rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
-  color: #1a1a1a;
+  color: #535658;
   padding: 0.25rem 0.6rem;
   border-radius: 6px;
   font-size: 0.75rem;
@@ -227,7 +227,7 @@ const formatDate = (dateString: string): string => {
 
 .doc-amount {
   font-weight: 700;
-  color: #7eff9f;
+  color: #535658;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
@@ -236,7 +236,7 @@ const formatDate = (dateString: string): string => {
   background: rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  color: #1a1a1a;
+  color: #535658;
   text-decoration: none;
   border-radius: 8px;
   font-weight: 600;
