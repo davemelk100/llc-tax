@@ -560,8 +560,91 @@ body::before {
 }
 
 @media (max-width: 768px) {
+  .header-content {
+    padding: 0 1rem;
+  }
+
+  .header-content h1 {
+    font-size: 28px;
+  }
+
+  .app-main {
+    padding: 1rem;
+  }
+
   .expenses-grid {
     grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .totals-card {
+    margin-top: 2rem;
+  }
+
+  .totals-content {
+    padding: 1.5rem;
+  }
+
+  .totals-content h2 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .totals-amount {
+    font-size: 2.5rem;
+  }
+
+  .totals-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .totals-meta .separator {
+    display: none;
+  }
+
+  .app-footer p {
+    padding: 0 1rem;
+    font-size: 0.875rem;
+  }
+
+  .modal-content {
+    max-width: calc(100% - 2rem);
+  }
+
+  .modal-header {
+    padding: 1rem 1.5rem;
+  }
+
+  .modal-header h2 {
+    font-size: 1.25rem;
+  }
+
+  .modal-body {
+    padding: 1.5rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-footer {
+    padding: 1rem 1.5rem;
+    flex-direction: column-reverse;
+  }
+
+  .cancel-btn,
+  .save-btn {
+    width: 100%;
+  }
+
+  .passcode-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .passcode-card h2 {
+    font-size: 1.5rem;
   }
 }
 

@@ -202,4 +202,53 @@ defineProps<{
   color: rgba(74, 139, 184, 1);
   transform: translateY(-2px);
 }
+
+@media (max-width: 768px) {
+  .card-header {
+    padding: 1rem;
+  }
+
+  .card-header h2 {
+    font-size: 1.25rem;
+  }
+
+  .description {
+    font-size: 0.85rem;
+  }
+
+  .card-body {
+    padding: 1rem;
+  }
+
+  .no-documents {
+    padding: 1.5rem;
+    font-size: 0.9rem;
+  }
+
+  .document-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+
+  .document-info h3 {
+    font-size: 16px;
+  }
+
+  .doc-amount {
+    font-size: 16px;
+    margin-right: 0;
+    align-self: flex-start;
+  }
+
+  .icon-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .icon-btn {
+    padding: 0.5rem;
+  }
+}
 </style>
