@@ -171,7 +171,7 @@ onMounted(() => {
 
 body {
   font-family: 'Roboto', sans-serif;
-  background: linear-gradient(135deg, #5691c4 0%, #3d6f9e 100%);
+  background: #5691c4;
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
