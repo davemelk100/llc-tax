@@ -136,7 +136,6 @@ const formatDate = (dateString: string): string => {
   font-weight: 600;
   position: relative;
   z-index: 1;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .description {
@@ -195,7 +194,6 @@ const formatDate = (dateString: string): string => {
   font-size: 1.1rem;
   font-weight: 600;
   color: #000000;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .doc-description {
@@ -228,7 +226,6 @@ const formatDate = (dateString: string): string => {
 .doc-amount {
   font-weight: 700;
   color: #000000;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .view-link {
