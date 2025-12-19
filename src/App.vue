@@ -222,7 +222,7 @@ body::before {
 }
 
 .header-content {
-  text-align: center;
+  text-align: left;
 }
 
 .header-content h1 {
