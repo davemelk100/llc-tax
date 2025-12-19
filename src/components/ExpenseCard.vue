@@ -15,6 +15,7 @@
             <p v-if="doc.description" class="doc-description">{{ doc.description }}</p>
             <div class="doc-meta">
               <span v-if="doc.amount" class="doc-amount">${{ doc.amount.toFixed(2) }}</span>
+              <span v-if="doc.amount" class="doc-separator">•</span>
               <span class="doc-date">{{ formatDate(doc.date) }}</span>
             </div>
           </div>
@@ -138,13 +139,20 @@ const formatDate = (dateString: string): string => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
+  padding: 1.5rem;
   background: rgba(255, 255, 255, 0.25);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.document-item:hover {
+  background: rgba(255, 255, 255, 0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
 }
 
 .document-info {
@@ -152,28 +160,37 @@ const formatDate = (dateString: string): string => {
 }
 
 .document-info h3 {
-  margin: 0 0 0.25rem 0;
-  font-size: 1.1rem;
+  margin: 0 0 0.5rem 0;
+  font-size: 1.25rem;
   font-weight: 600;
   color: #000000;
+  line-height: 1.3;
 }
 
 .doc-description {
-  margin: 0 0 0.5rem 0;
-  font-size: 0.9rem;
-  color: #000000;
+  margin: 0 0 0.75rem 0;
+  font-size: 0.95rem;
+  color: rgba(0, 0, 0, 0.75);
+  line-height: 1.5;
 }
 
 .doc-meta {
   display: flex;
-  gap: 1rem;
-  font-size: 0.85rem;
-  color: #000000;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+  color: rgba(0, 0, 0, 0.7);
 }
 
 .doc-amount {
   font-weight: 700;
+  font-size: 1.1rem;
   color: #000000;
+}
+
+.doc-separator {
+  color: rgba(0, 0, 0, 0.4);
+  font-weight: 700;
 }
 
 .view-link {
