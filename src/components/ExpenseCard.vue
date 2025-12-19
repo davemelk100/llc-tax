@@ -56,33 +56,6 @@ const formatDate = (dateString: string): string => {
               inset 0 1px 0 rgba(255, 255, 255, 0.5);
   overflow: hidden;
   position: relative;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.expense-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg,
-    transparent,
-    rgba(255, 255, 255, 0.2),
-    transparent
-  );
-  transition: left 0.6s ease;
-}
-
-.expense-card:hover::before {
-  left: 100%;
-}
-
-.expense-card:hover {
-  transform: translateY(-4px) scale(1.01);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15),
-              inset 0 1px 0 rgba(255, 255, 255, 0.6);
-  border-color: rgba(255, 255, 255, 0.4);
 }
 
 .card-header {
@@ -171,15 +144,7 @@ const formatDate = (dateString: string): string => {
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 10px;
-  transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.document-item:hover {
-  background: rgba(255, 255, 255, 0.35);
-  border-color: rgba(255, 255, 255, 0.5);
-  transform: translateX(4px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
 }
 
 .document-info {
@@ -221,15 +186,7 @@ const formatDate = (dateString: string): string => {
   border-radius: 8px;
   font-weight: 600;
   font-family: 'Roboto', sans-serif;
-  transition: all 0.3s ease;
   white-space: nowrap;
   border: 1px solid rgba(255, 255, 255, 0.4);
-}
-
-.view-link:hover {
-  background: rgba(255, 255, 255, 0.45);
-  border-color: rgba(255, 255, 255, 0.6);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 </style>
