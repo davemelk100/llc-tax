@@ -4,9 +4,6 @@
       <div class="header-content">
         <h1>Melkonian Industries LLC</h1>
       </div>
-      <button @click="showAdmin = true" class="admin-btn">
-        Admin Panel
-      </button>
     </header>
 
     <main class="app-main">
@@ -47,6 +44,8 @@
       class="overlay"
       @click="showAdmin = false"
     ></div>
+
+    <a href="#" @click.prevent="showAdmin = true" class="admin-link">A</a>
   </div>
 </template>
 
@@ -150,10 +149,6 @@ body::before {
   opacity: 0.5;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding: 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 2rem;
   z-index: 100;
 }
 
@@ -164,24 +159,19 @@ body::before {
   text-shadow: rgba(255, 255, 255, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(255, 255, 255, 0.5) 0px 0px 1px;
 }
 
-.admin-btn {
-  padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, #5691c4 0%, #3d6f9e 100%);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 600;
-  font-family: 'Roboto', sans-serif;
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-  white-space: nowrap;
-  text-transform: uppercase;
+.admin-link {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  z-index: 1000;
+  transition: color 0.2s;
 }
 
-.admin-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(86, 145, 196, 0.4);
+.admin-link:hover {
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .app-main {
@@ -278,11 +268,6 @@ body::before {
 }
 
 @media (max-width: 768px) {
-  .app-header {
-    flex-direction: column;
-    text-align: center;
-  }
-
   .expenses-grid {
     grid-template-columns: 1fr;
   }
