@@ -215,7 +215,7 @@ const formatDate = (dateString: string): string => {
   background: rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
-  color: white;
+  color: #1a1a1a;
   padding: 0.25rem 0.6rem;
   border-radius: 6px;
   font-size: 0.75rem;
@@ -236,7 +236,7 @@ const formatDate = (dateString: string): string => {
   background: rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  color: white;
+  color: #1a1a1a;
   text-decoration: none;
   border-radius: 8px;
   font-weight: 600;
@@ -244,7 +244,6 @@ const formatDate = (dateString: string): string => {
   transition: all 0.3s ease;
   white-space: nowrap;
   border: 1px solid rgba(255, 255, 255, 0.4);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .view-link:hover {
