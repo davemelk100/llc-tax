@@ -144,7 +144,7 @@ body::before {
 }
 
 .app-header {
-  background: rgba(240, 240, 240, 0.5);
+  background: #f0f0f0;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding: 2rem;
   display: flex;
