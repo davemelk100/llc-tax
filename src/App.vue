@@ -218,7 +218,7 @@ body::before {
   background: #f0f0f0;
   opacity: 1;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  padding: 2rem;
+  padding: 0.5rem;
   z-index: 100;
 }
 
