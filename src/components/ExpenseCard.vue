@@ -12,10 +12,8 @@
         <div v-for="doc in documents" :key="doc.id" class="document-item">
           <div class="document-info">
             <h3>{{ doc.title }}</h3>
-            <div class="doc-meta">
-              <span v-if="doc.amount" class="doc-amount">${{ doc.amount.toFixed(2) }}</span>
-            </div>
           </div>
+          <span v-if="doc.amount" class="doc-amount">${{ doc.amount.toFixed(2) }}</span>
           <div class="icon-actions">
             <a :href="doc.url" target="_blank" rel="noopener noreferrer" class="icon-btn" title="Open in new window">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -161,37 +159,19 @@ defineProps<{
 }
 
 .document-info h3 {
-  margin: 0 0 0.5rem 0;
+  margin: 0;
   font-size: 1.25rem;
   font-weight: 600;
   color: #000000;
   line-height: 1.3;
 }
 
-.doc-description {
-  margin: 0 0 0.75rem 0;
-  font-size: 0.95rem;
-  color: rgba(0, 0, 0, 0.75);
-  line-height: 1.5;
-}
-
-.doc-meta {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-size: 0.9rem;
-  color: rgba(0, 0, 0, 0.7);
-}
-
 .doc-amount {
   font-weight: 700;
   font-size: 1.1rem;
   color: #000000;
-}
-
-.doc-separator {
-  color: rgba(0, 0, 0, 0.4);
-  font-weight: 700;
+  margin-right: 1rem;
+  white-space: nowrap;
 }
 
 .icon-actions {
