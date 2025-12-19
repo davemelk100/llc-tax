@@ -146,7 +146,8 @@ body::before {
 .app-header {
   position: sticky;
   top: 0;
-  background: rgba(240, 240, 240, 0.6);
+  background: #f0f0f0;
+  opacity: 0.5;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding: 2rem;
   display: flex;
