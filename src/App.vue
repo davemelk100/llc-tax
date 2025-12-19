@@ -223,6 +223,10 @@ body::before {
 
 .header-content {
   text-align: left;
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 2rem;
 }
 
 .header-content h1 {
