@@ -52,7 +52,7 @@ const activeTab = ref<'categories' | 'documents'>('categories');
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 2rem 3rem;
+  padding: 1.25rem 3rem;
   background: linear-gradient(135deg, #4a8bb8 0%, #3d6f9e 100%);
   color: white;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -60,7 +60,7 @@ const activeTab = ref<'categories' | 'documents'>('categories');
 
 .admin-header h1 {
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.5rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -69,11 +69,11 @@ const activeTab = ref<'categories' | 'documents'>('categories');
   background: rgba(255, 255, 255, 0.2);
   border: 2px solid white;
   color: white;
-  font-size: 1rem;
+  font-size: 0.875rem;
   font-family: 'Roboto', sans-serif;
   cursor: pointer;
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
   transition: all 0.2s;
   text-transform: uppercase;
   font-weight: 600;
