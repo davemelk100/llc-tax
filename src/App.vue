@@ -144,13 +144,17 @@ body::before {
 }
 
 .app-header {
+  position: sticky;
+  top: 0;
   background: #f0f0f0;
+  opacity: 0.6;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding: 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 2rem;
+  z-index: 100;
 }
 
 .header-content h1 {
