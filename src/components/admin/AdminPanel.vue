@@ -56,6 +56,7 @@ const activeTab = ref<'categories' | 'documents'>('categories');
   background: linear-gradient(135deg, #4a8bb8 0%, #3d6f9e 100%);
   color: white;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  opacity: 1;
 }
 
 .admin-header h1 {
