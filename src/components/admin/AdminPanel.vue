@@ -66,9 +66,9 @@ const activeTab = ref<'categories' | 'documents'>('categories');
 }
 
 .close-btn {
-  background: rgba(255, 255, 255, 0.2);
+  background: white;
   border: 2px solid white;
-  color: white;
+  color: #3d6f9e;
   font-size: 0.875rem;
   font-family: 'Roboto', sans-serif;
   cursor: pointer;
@@ -80,8 +80,8 @@ const activeTab = ref<'categories' | 'documents'>('categories');
 }
 
 .close-btn:hover {
-  background: white;
-  color: #3d6f9e;
+  background: #f8f9fa;
+  color: #2e5a7d;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
