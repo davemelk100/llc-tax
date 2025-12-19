@@ -216,7 +216,7 @@ body::before {
   display: inline-block;
   margin: 0;
   font-size: 48px;
-  color: #3d6f9e;
+  color: #f0f0f0;
   background: #e0e0e0;
   padding: 15px 50px;
   border-radius: 15px;
