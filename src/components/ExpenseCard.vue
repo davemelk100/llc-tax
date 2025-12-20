@@ -48,19 +48,11 @@
             <div v-for="attachment in getAttachments(doc.id)" :key="attachment.id" class="attachment-item">
               <div class="attachment-name">{{ attachment.file_name }}</div>
               <div class="attachment-actions">
-                <a :href="attachment.url" target="_blank" rel="noopener noreferrer" class="icon-btn-small" title="Open PDF">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                    <polyline points="15 3 21 3 21 9"></polyline>
-                    <line x1="10" y1="14" x2="21" y2="3"></line>
-                  </svg>
+                <a :href="attachment.url" target="_blank" rel="noopener noreferrer" class="action-link">
+                  OPEN
                 </a>
-                <a :href="attachment.url" :download="attachment.file_name" class="icon-btn-small" title="Download PDF">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                    <polyline points="7 10 12 15 17 10"></polyline>
-                    <line x1="12" y1="15" x2="12" y2="3"></line>
-                  </svg>
+                <a :href="attachment.url" :download="attachment.file_name" class="action-link">
+                  DOWNLOAD
                 </a>
               </div>
             </div>
@@ -305,28 +297,28 @@ onMounted(() => {
   position: relative;
 }
 
-.icon-btn-small {
-  display: flex;
+.action-link {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.6rem;
-  background: rgba(255, 255, 255, 0.6);
-  color: #2d2d2d;
+  padding: 0.6rem 1rem;
+  background: rgba(74, 139, 184, 0.8);
+  color: #ffffff;
   text-decoration: none;
   border-radius: 8px;
-  border: 2px solid rgba(74, 139, 184, 0.3);
+  border: 2px solid rgba(74, 139, 184, 1);
   transition: all 0.2s ease;
   cursor: pointer;
-  min-width: 36px;
-  min-height: 36px;
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.5px;
 }
 
-.icon-btn-small:hover {
-  background: rgba(74, 139, 184, 0.9);
-  color: #ffffff;
-  border-color: rgba(74, 139, 184, 1);
+.action-link:hover {
+  background: rgba(61, 111, 158, 1);
+  border-color: rgba(61, 111, 158, 1);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(74, 139, 184, 0.4);
+  box-shadow: 0 4px 12px rgba(74, 139, 184, 0.5);
 }
 
 .document-info {
