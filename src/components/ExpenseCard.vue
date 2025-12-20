@@ -274,12 +274,7 @@ defineProps<{
     padding: 1rem;
   }
 
-  .document-info h3 {
-    font-size: 16px;
-  }
-
   .doc-amount {
-    font-size: 16px;
     margin-right: 0;
     align-self: flex-start;
   }
