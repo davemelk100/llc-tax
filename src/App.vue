@@ -74,6 +74,7 @@
             :documents="getDocumentsForCategory(category.id)"
             @edit-document="openEditDialog"
             @add-document="openAddDialog"
+            @delete-document="handleDeleteDocument"
           />
         </div>
 
@@ -364,6 +365,20 @@ const saveEdit = async () => {
     alert('Failed to update document: ' + (e.message || 'Unknown error'));
   } finally {
     saving.value = false;
+  }
+};
+
+const handleDeleteDocument = async (document: ExpenseDocument) => {
+  if (!confirm(`Are you sure you want to delete "${document.title}"?`)) return;
+
+  loading.value = true;
+  try {
+    await supabase.deleteDocument(document.id);
+    await loadData();
+  } catch (e: any) {
+    alert('Failed to delete document: ' + (e.message || 'Unknown error'));
+  } finally {
+    loading.value = false;
   }
 };
 
