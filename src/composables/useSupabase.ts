@@ -27,18 +27,6 @@ export interface ExpenseDocument {
   updated_at: string;
 }
 
-export interface DocumentAttachment {
-  id: string;
-  document_id: string;
-  url: string;
-  file_name: string;
-  file_type: string;
-  file_size: number | null;
-  display_order: number;
-  created_at: string;
-  updated_at: string;
-}
-
 export interface CompanyProfile {
   id: string;
   filing_number: string;
@@ -243,57 +231,6 @@ export const useSupabase = () => {
     return data;
   };
 
-  const getAttachments = async (documentId: string): Promise<DocumentAttachment[]> => {
-    const { data, error } = await supabase
-      .from('document_attachments')
-      .select('*')
-      .eq('document_id', documentId)
-      .order('display_order', { ascending: true });
-
-    if (error) throw new Error(error.message);
-    return data || [];
-  };
-
-  const createAttachment = async (input: {
-    document_id: string;
-    url: string;
-    file_name: string;
-    file_type?: string;
-    file_size?: number;
-    display_order?: number;
-  }): Promise<DocumentAttachment> => {
-    const { data, error } = await supabase
-      .from('document_attachments')
-      .insert({
-        document_id: input.document_id,
-        url: input.url,
-        file_name: input.file_name,
-        file_type: input.file_type || '',
-        file_size: input.file_size || null,
-        display_order: input.display_order || 0,
-      })
-      .select()
-      .single();
-
-    if (error) throw new Error(error.message);
-    return data;
-  };
-
-  const deleteAttachment = async (id: string): Promise<boolean> => {
-    const { error } = await supabase
-      .from('document_attachments')
-      .delete()
-      .eq('id', id);
-
-    if (error) throw new Error(error.message);
-    return true;
-  };
-
-  const uploadMultipleFiles = async (files: File[]): Promise<string[]> => {
-    const uploadPromises = files.map(file => uploadFile(file));
-    return Promise.all(uploadPromises);
-  };
-
   return {
     getCategories,
     getDocuments,
@@ -304,11 +241,7 @@ export const useSupabase = () => {
     updateDocument,
     deleteDocument,
     uploadFile,
-    uploadMultipleFiles,
     getCompanyProfile,
     updateCompanyProfile,
-    getAttachments,
-    createAttachment,
-    deleteAttachment,
   };
 };

@@ -19,42 +19,31 @@
         No documents yet
       </div>
       <div v-else class="documents-list">
-        <div v-for="doc in documents" :key="doc.id" class="document-wrapper">
-          <div class="document-item">
-            <div class="document-info">
-              <h3>{{ doc.title }}</h3>
-            </div>
-            <span v-if="doc.amount" class="doc-amount">${{ doc.amount.toFixed(2) }}</span>
-            <div class="icon-actions">
-              <button
-                @click="toggleExpand(doc.id)"
-                class="icon-btn"
-                :title="isExpanded(doc.id) ? 'Hide attachments' : 'Show attachments'"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
-                </svg>
-                <span v-if="getAttachments(doc.id).length > 0" class="attachment-count">{{ getAttachments(doc.id).length }}</span>
-              </button>
-              <button @click="$emit('edit-document', doc)" class="icon-btn" title="Edit">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
-                </svg>
-              </button>
-            </div>
+        <div v-for="doc in documents" :key="doc.id" class="document-item">
+          <div class="document-info">
+            <h3>{{ doc.title }}</h3>
           </div>
-          <div v-if="isExpanded(doc.id)" class="attachments-list">
-            <div v-for="attachment in getAttachments(doc.id)" :key="attachment.id" class="attachment-item">
-              <div class="attachment-name">{{ attachment.file_name }}</div>
-              <div class="attachment-actions">
-                <a :href="attachment.url" target="_blank" rel="noopener noreferrer" class="action-link">
-                  OPEN
-                </a>
-                <a :href="attachment.url" :download="attachment.file_name" class="action-link">
-                  DOWNLOAD
-                </a>
-              </div>
-            </div>
+          <span v-if="doc.amount" class="doc-amount">${{ doc.amount.toFixed(2) }}</span>
+          <div class="icon-actions">
+            <a :href="doc.url" target="_blank" rel="noopener noreferrer" class="icon-btn" title="Open in new window">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <line x1="10" y1="14" x2="21" y2="3"></line>
+              </svg>
+            </a>
+            <a :href="doc.url" :download="doc.title" class="icon-btn" title="Download">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+            </a>
+            <button @click="$emit('edit-document', doc)" class="icon-btn" title="Edit">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+              </svg>
+            </button>
           </div>
         </div>
       </div>
@@ -63,56 +52,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue';
-import type { ExpenseCategory, ExpenseDocument, DocumentAttachment } from '../composables/useSupabase';
-import { useSupabase } from '../composables/useSupabase';
+import type { ExpenseCategory, ExpenseDocument } from '../composables/useSupabase';
 
-const props = defineProps<{
+defineProps<{
   category: ExpenseCategory;
   documents: ExpenseDocument[];
 }>();
-
-const supabase = useSupabase();
-const attachmentsMap = ref<Record<string, DocumentAttachment[]>>({});
-const expandedDocuments = ref<Set<string>>(new Set());
-
-const loadAttachments = async () => {
-  for (const doc of props.documents) {
-    try {
-      const attachments = await supabase.getAttachments(doc.id);
-      attachmentsMap.value[doc.id] = attachments;
-      if (attachments.length > 0) {
-        console.log('Loaded attachments for', doc.title, ':', attachments);
-      }
-    } catch (error) {
-      console.error('Failed to load attachments for document', doc.id, error);
-    }
-  }
-};
-
-const toggleExpand = (docId: string) => {
-  if (expandedDocuments.value.has(docId)) {
-    expandedDocuments.value.delete(docId);
-  } else {
-    expandedDocuments.value.add(docId);
-  }
-};
-
-const isExpanded = (docId: string) => {
-  return expandedDocuments.value.has(docId);
-};
-
-const getAttachments = (docId: string): DocumentAttachment[] => {
-  return attachmentsMap.value[docId] || [];
-};
-
-watch(() => props.documents, () => {
-  loadAttachments();
-}, { deep: true });
-
-onMounted(() => {
-  loadAttachments();
-});
 </script>
 
 <style scoped>
@@ -213,12 +158,6 @@ onMounted(() => {
   gap: 1rem;
 }
 
-.document-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
 .document-item {
   display: flex;
   justify-content: space-between;
@@ -236,88 +175,6 @@ onMounted(() => {
   background: rgba(255, 255, 255, 0.35);
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-}
-
-.attachments-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding-left: 1rem;
-  margin-top: 0.5rem;
-}
-
-.attachment-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.75rem 1rem;
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  transition: all 0.2s ease;
-}
-
-.attachment-item:hover {
-  background: rgba(255, 255, 255, 0.3);
-  border-color: rgba(74, 139, 184, 0.5);
-}
-
-.attachment-name {
-  flex: 1;
-  font-size: 15px;
-  color: #000000;
-  font-weight: 500;
-  margin-right: 1rem;
-}
-
-.attachment-actions {
-  display: flex;
-  gap: 0.75rem;
-  flex-shrink: 0;
-}
-
-.attachment-count {
-  position: absolute;
-  top: -4px;
-  right: -4px;
-  background: rgba(74, 139, 184, 1);
-  color: white;
-  font-size: 10px;
-  font-weight: 600;
-  padding: 2px 5px;
-  border-radius: 10px;
-  min-width: 16px;
-  text-align: center;
-}
-
-.icon-btn {
-  position: relative;
-}
-
-.action-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.6rem 1rem;
-  background: rgba(74, 139, 184, 0.8);
-  color: #ffffff;
-  text-decoration: none;
-  border-radius: 8px;
-  border: 2px solid rgba(74, 139, 184, 1);
-  transition: all 0.2s ease;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 13px;
-  letter-spacing: 0.5px;
-}
-
-.action-link:hover {
-  background: rgba(61, 111, 158, 1);
-  border-color: rgba(61, 111, 158, 1);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(74, 139, 184, 0.5);
 }
 
 .document-info {
@@ -350,21 +207,17 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   padding: 0.65rem;
-  background: rgba(74, 139, 184, 0.2);
+  background: transparent;
   color: #000000;
   text-decoration: none;
   border-radius: 8px;
-  border: 2px solid rgba(74, 139, 184, 0.4);
+  border: none;
   transition: all 0.2s ease;
   cursor: pointer;
-  min-width: 40px;
-  min-height: 40px;
 }
 
 .icon-btn:hover {
-  background: rgba(74, 139, 184, 0.4);
-  color: #000000;
-  border-color: rgba(74, 139, 184, 0.6);
+  color: rgba(74, 139, 184, 1);
   transform: translateY(-2px);
 }
 

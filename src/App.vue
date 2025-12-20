@@ -127,20 +127,12 @@
                 </select>
               </div>
               <div v-if="isAddMode" class="form-group">
-                <label>FILES * (You can select multiple)</label>
-                <input type="file" @change="handleMultipleFilesChange" class="form-input" accept=".pdf,.jpg,.jpeg,.png" multiple />
-                <p v-if="selectedFiles.length > 0" class="file-count">{{ selectedFiles.length }} file(s) selected</p>
+                <label>FILE *</label>
+                <input type="file" @change="handleFileChange" class="form-input" accept=".pdf,.jpg,.jpeg,.png" />
               </div>
-              <div v-else>
-                <div class="form-group">
-                  <label>URL *</label>
-                  <input v-model="editForm.url" type="text" class="form-input" />
-                </div>
-                <div class="form-group">
-                  <label>ADD MORE FILES (Optional)</label>
-                  <input type="file" @change="handleMultipleFilesChange" class="form-input" accept=".pdf,.jpg,.jpeg,.png" multiple />
-                  <p v-if="selectedFiles.length > 0" class="file-count">{{ selectedFiles.length }} file(s) selected to add</p>
-                </div>
+              <div v-else class="form-group">
+                <label>URL *</label>
+                <input v-model="editForm.url" type="text" class="form-input" />
               </div>
               <div class="form-row">
                 <div class="form-group">
@@ -189,7 +181,7 @@ const passcodeError = ref('');
 const showEditDialog = ref(false);
 const editingDocument = ref<ExpenseDocument | null>(null);
 const isAddMode = ref(false);
-const selectedFiles = ref<File[]>([]);
+const selectedFile = ref<File | null>(null);
 const saving = ref(false);
 const editForm = ref({
   category_id: '',
@@ -273,7 +265,7 @@ const loadData = async () => {
 const openAddDialog = (category: ExpenseCategory) => {
   isAddMode.value = true;
   editingDocument.value = null;
-  selectedFiles.value = [];
+  selectedFile.value = null;
   editForm.value.category_id = category.id;
   editForm.value.title = '';
   editForm.value.description = '';
@@ -287,6 +279,7 @@ const openAddDialog = (category: ExpenseCategory) => {
 const openEditDialog = (document: ExpenseDocument) => {
   isAddMode.value = false;
   editingDocument.value = document;
+  selectedFile.value = null;
   editForm.value.category_id = document.category_id;
   editForm.value.title = document.title;
   editForm.value.description = document.description;
@@ -297,10 +290,10 @@ const openEditDialog = (document: ExpenseDocument) => {
   showEditDialog.value = true;
 };
 
-const handleMultipleFilesChange = (event: Event) => {
+const handleFileChange = (event: Event) => {
   const target = event.target as HTMLInputElement;
   if (target.files && target.files.length > 0) {
-    selectedFiles.value = Array.from(target.files);
+    selectedFile.value = target.files[0];
   }
 };
 
@@ -308,7 +301,7 @@ const closeEditDialog = () => {
   showEditDialog.value = false;
   editingDocument.value = null;
   isAddMode.value = false;
-  selectedFiles.value = [];
+  selectedFile.value = null;
   editForm.value.category_id = '';
   editForm.value.title = '';
   editForm.value.description = '';
@@ -319,8 +312,8 @@ const closeEditDialog = () => {
 };
 
 const saveAdd = async () => {
-  if (selectedFiles.value.length === 0) {
-    alert('Please select at least one file');
+  if (!selectedFile.value) {
+    alert('Please select a file');
     return;
   }
 
@@ -331,30 +324,17 @@ const saveAdd = async () => {
 
   saving.value = true;
   try {
-    const uploadedUrls = await supabase.uploadMultipleFiles(selectedFiles.value);
-    const firstUrl = uploadedUrls[0];
+    const uploadedUrl = await supabase.uploadFile(selectedFile.value);
 
-    const newDocument = await supabase.createDocument({
+    await supabase.createDocument({
       category_id: editForm.value.category_id,
       title: editForm.value.title,
       description: editForm.value.description,
       document_type: editForm.value.document_type,
-      url: firstUrl,
+      url: uploadedUrl,
       amount: editForm.value.amount || undefined,
       date: editForm.value.date || new Date().toISOString().split('T')[0]
     });
-
-    for (let i = 0; i < selectedFiles.value.length; i++) {
-      const file = selectedFiles.value[i];
-      await supabase.createAttachment({
-        document_id: newDocument.id,
-        url: uploadedUrls[i],
-        file_name: file.name,
-        file_type: file.type,
-        file_size: file.size,
-        display_order: i
-      });
-    }
 
     await loadData();
     closeEditDialog();
@@ -378,27 +358,6 @@ const saveEdit = async () => {
       amount: editForm.value.amount,
       date: editForm.value.date
     });
-
-    if (selectedFiles.value.length > 0) {
-      const uploadedUrls = await supabase.uploadMultipleFiles(selectedFiles.value);
-      const existingAttachments = await supabase.getAttachments(editingDocument.value.id);
-      const maxOrder = existingAttachments.length > 0
-        ? Math.max(...existingAttachments.map(a => a.display_order))
-        : -1;
-
-      for (let i = 0; i < selectedFiles.value.length; i++) {
-        const file = selectedFiles.value[i];
-        await supabase.createAttachment({
-          document_id: editingDocument.value.id,
-          url: uploadedUrls[i],
-          file_name: file.name,
-          file_type: file.type,
-          file_size: file.size,
-          display_order: maxOrder + i + 1
-        });
-      }
-    }
-
     await loadData();
     closeEditDialog();
   } catch (e: any) {
@@ -897,13 +856,6 @@ body::before {
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-}
-
-.file-count {
-  margin-top: 0.5rem;
-  font-size: 0.875rem;
-  color: #3d6f9e;
-  font-weight: 500;
 }
 
 .form-input {
