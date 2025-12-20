@@ -345,21 +345,26 @@ onMounted(async () => {
 .document-manager h2,
 .document-manager h3 {
   margin: 0 0 1rem 0;
-  color: #2c3e50;
+  color: #ffffff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .document-form {
-  background: #f8f9fa;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.5);
   padding: 1.5rem;
-  border-radius: 8px;
+  border-radius: 16px;
   margin-bottom: 2rem;
   transition: all 0.3s;
 }
 
 .document-form.editing {
-  background: #fff8e1;
-  border: 2px solid #ffc107;
-  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.2);
+  background: rgba(255, 193, 7, 0.2);
+  border: 2px solid rgba(255, 193, 7, 0.6);
+  box-shadow: 0 8px 32px rgba(255, 193, 7, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
 .form-group {
@@ -375,26 +380,34 @@ onMounted(async () => {
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
-  font-weight: 500;
-  color: #495057;
+  font-weight: 600;
+  color: #ffffff;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
 }
 
 .form-group input,
 .form-group textarea,
 .form-group select {
   width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #ced4da;
-  border-radius: 4px;
+  padding: 0.75rem 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
   font-size: 1rem;
   font-family: inherit;
+  background: rgba(255, 255, 255, 0.9);
+  color: #333;
+  transition: all 0.2s;
 }
 
 .form-group input:focus,
 .form-group textarea:focus,
 .form-group select:focus {
   outline: none;
-  border-color: #5691c4;
+  border-color: rgba(255, 255, 255, 0.6);
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
 }
 
 .upload-choice {
@@ -409,6 +422,7 @@ onMounted(async () => {
   gap: 0.5rem;
   cursor: pointer;
   font-weight: 500;
+  color: #ffffff;
 }
 
 .radio-option input[type="radio"] {
@@ -419,21 +433,25 @@ onMounted(async () => {
 .upload-progress {
   margin-top: 0.5rem;
   padding: 0.5rem;
-  background: #e3f2fd;
-  color: #1976d2;
-  border-radius: 4px;
+  background: rgba(33, 150, 243, 0.2);
+  border: 1px solid rgba(33, 150, 243, 0.4);
+  color: #ffffff;
+  border-radius: 8px;
   font-size: 0.9rem;
   text-align: center;
+  font-weight: 500;
 }
 
 .file-preview {
   margin-top: 0.5rem;
   padding: 0.5rem;
-  background: #e8f5e9;
-  color: #2e7d32;
-  border-radius: 4px;
+  background: rgba(76, 175, 80, 0.2);
+  border: 1px solid rgba(76, 175, 80, 0.4);
+  color: #ffffff;
+  border-radius: 8px;
   font-size: 0.9rem;
   text-align: center;
+  font-weight: 500;
 }
 
 .form-actions {
@@ -444,81 +462,107 @@ onMounted(async () => {
 .btn-primary {
   flex: 1;
   padding: 0.75rem;
-  background: #5691c4;
+  background: linear-gradient(135deg, #5691c4 0%, #3d6f9e 100%);
   color: white;
   border: none;
-  border-radius: 6px;
-  font-weight: 500;
+  border-radius: 8px;
+  font-weight: 600;
   font-family: 'Roboto', sans-serif;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.2s;
   text-transform: uppercase;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .btn-primary:hover {
-  background: #4a7ba7;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(86, 145, 196, 0.4);
 }
 
 .btn-secondary {
   padding: 0.75rem 1rem;
-  background: #95a5a6;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   color: white;
-  border: none;
-  border-radius: 6px;
-  font-weight: 500;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 8px;
+  font-weight: 600;
   font-family: 'Roboto', sans-serif;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.2s;
   text-transform: uppercase;
 }
 
 .btn-secondary:hover {
-  background: #7f8c8d;
+  background: rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px);
 }
 
 .loading,
 .error {
   padding: 1rem;
-  border-radius: 6px;
+  border-radius: 12px;
   margin-bottom: 1rem;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-weight: 500;
 }
 
 .loading {
-  background: #e3f2fd;
-  color: #1976d2;
+  background: rgba(33, 150, 243, 0.2);
+  border: 1px solid rgba(33, 150, 243, 0.4);
+  color: #ffffff;
 }
 
 .error {
-  background: #ffebee;
-  color: #c62828;
+  background: rgba(239, 83, 80, 0.2);
+  border: 1px solid rgba(239, 83, 80, 0.4);
+  color: #ffffff;
 }
 
 .filter-group {
   margin-bottom: 1rem;
   padding: 1rem;
-  background: #f8f9fa;
-  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
 }
 
 .filter-group label {
   display: block;
   margin-bottom: 0.5rem;
-  font-weight: 500;
-  color: #495057;
+  font-weight: 600;
+  color: #ffffff;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
 }
 
 .filter-group select {
   width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #ced4da;
-  border-radius: 4px;
+  padding: 0.75rem 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
   font-size: 1rem;
+  background: rgba(255, 255, 255, 0.9);
+  color: #333;
+  transition: all 0.2s;
+}
+
+.filter-group select:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.6);
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
 }
 
 .no-items {
   text-align: center;
   padding: 2rem;
-  color: #95a5a6;
+  color: rgba(255, 255, 255, 0.7);
   font-style: italic;
 }
 
@@ -533,8 +577,19 @@ onMounted(async () => {
   justify-content: space-between;
   align-items: flex-start;
   padding: 1rem;
-  background: #f8f9fa;
-  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.document-item:hover {
+  background: rgba(255, 255, 255, 0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
 }
 
 .document-info {
@@ -544,15 +599,25 @@ onMounted(async () => {
   gap: 0.25rem;
 }
 
+.document-info strong {
+  color: #ffffff;
+  font-size: 1rem;
+}
+
 .document-category {
   font-size: 0.85rem;
-  color: #5691c4;
+  color: rgba(255, 255, 255, 0.95);
   font-weight: 600;
+  background: rgba(86, 145, 196, 0.3);
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  display: inline-block;
+  width: fit-content;
 }
 
 .document-desc {
   font-size: 0.9rem;
-  color: #6c757d;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .document-meta {
@@ -562,24 +627,27 @@ onMounted(async () => {
 }
 
 .doc-type-badge {
-  background: #5691c4;
+  background: rgba(86, 145, 196, 0.6);
   color: white;
   padding: 0.15rem 0.5rem;
-  border-radius: 4px;
+  border-radius: 6px;
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
 }
 
 .doc-amount {
-  font-weight: 600;
-  color: #27ae60;
+  font-weight: 700;
+  color: #ffffff;
   font-size: 0.9rem;
+  background: rgba(76, 175, 80, 0.3);
+  padding: 0.15rem 0.5rem;
+  border-radius: 6px;
 }
 
 .doc-date {
   font-size: 0.85rem;
-  color: #95a5a6;
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .document-actions {
@@ -593,41 +661,49 @@ onMounted(async () => {
 .btn-delete {
   padding: 0.5rem 0.75rem;
   border: none;
-  border-radius: 4px;
-  font-size: 0.9rem;
-  font-weight: 500;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
   font-family: 'Roboto', sans-serif;
   cursor: pointer;
   text-decoration: none;
   text-align: center;
   transition: all 0.2s;
   text-transform: uppercase;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .btn-view {
-  background: #27ae60;
+  background: rgba(76, 175, 80, 0.8);
   color: white;
 }
 
 .btn-view:hover {
-  background: #229954;
+  background: rgba(56, 142, 60, 0.9);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .btn-edit {
-  background: #5691c4;
+  background: rgba(86, 145, 196, 0.8);
   color: white;
 }
 
 .btn-edit:hover {
-  background: #4a7ba7;
+  background: rgba(74, 123, 167, 0.9);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .btn-delete {
-  background: #e74c3c;
+  background: rgba(231, 76, 60, 0.8);
   color: white;
 }
 
 .btn-delete:hover {
-  background: #c0392b;
+  background: rgba(192, 57, 43, 0.9);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 </style>
