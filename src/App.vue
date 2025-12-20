@@ -26,19 +26,25 @@
       <CompanyProfile
         v-else-if="showProfile"
         @close="showProfile = false"
-        @open-admin="showProfile = false; showAdmin = true"
       />
 
       <template v-else>
         <header class="app-header">
           <div class="header-content">
             <h1>Melkonian Industries LLC</h1>
-            <button @click="showProfile = true" class="profile-btn">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-              </svg>
-            </button>
+            <div class="header-actions">
+              <button @click="showProfile = true" class="profile-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </button>
+              <button @click="showAdmin = true" class="admin-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+                </svg>
+              </button>
+            </div>
           </div>
         </header>
 
@@ -433,7 +439,14 @@ body::before {
   text-transform: uppercase;
 }
 
-.profile-btn {
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.profile-btn,
+.admin-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -450,7 +463,8 @@ body::before {
   transition: all 0.2s;
 }
 
-.profile-btn:hover {
+.profile-btn:hover,
+.admin-btn:hover {
   background: rgba(255, 255, 255, 0.3);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
