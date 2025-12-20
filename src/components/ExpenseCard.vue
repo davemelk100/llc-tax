@@ -245,7 +245,7 @@ defineProps<{
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .card-header {
     padding: 1rem;
   }

@@ -636,7 +636,7 @@ body::before {
   font-size: 1.2rem;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .header-content {
     padding: 0 1rem;
   }
