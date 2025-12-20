@@ -33,11 +33,10 @@
           <div class="header-content">
             <h1>Melkonian Industries LLC</h1>
             <button @click="showProfile = true" class="profile-btn">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                 <circle cx="12" cy="7" r="4"></circle>
               </svg>
-              Company Profile
             </button>
           </div>
         </header>
@@ -438,8 +437,8 @@ body::before {
 .profile-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
+  justify-content: center;
+  padding: 0.75rem;
   background: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(10px);
   color: white;
@@ -450,7 +449,6 @@ body::before {
   font-family: 'Roboto', sans-serif;
   cursor: pointer;
   transition: all 0.2s;
-  white-space: nowrap;
 }
 
 .profile-btn:hover {
@@ -678,18 +676,11 @@ body::before {
 @media (max-width: 640px) {
   .header-content {
     padding: 0 1rem;
-    flex-direction: column;
     gap: 1rem;
-    align-items: flex-start;
   }
 
   .header-content h1 {
     font-size: 28px;
-  }
-
-  .profile-btn {
-    width: 100%;
-    justify-content: center;
   }
 
   .app-main {
