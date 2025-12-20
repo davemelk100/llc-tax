@@ -768,15 +768,15 @@ body::before {
   }
 
   .modal-header {
-    padding: 1rem 1.5rem;
+    padding: 1rem 1.25rem;
   }
 
   .modal-header h2 {
-    font-size: 1.25rem;
+    font-size: 1.125rem;
   }
 
   .modal-body {
-    padding: 1.5rem;
+    padding: 1.25rem;
   }
 
   .form-row {
@@ -784,7 +784,7 @@ body::before {
   }
 
   .modal-footer {
-    padding: 1rem 1.5rem;
+    padding: 1rem 1.25rem;
     flex-direction: column-reverse;
   }
 
@@ -823,23 +823,27 @@ body::before {
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   max-width: 600px;
   width: 100%;
+  max-height: 90vh;
   overflow: hidden;
   border: 2px solid rgba(86, 145, 196, 0.3);
+  display: flex;
+  flex-direction: column;
 }
 
 .modal-header {
-  padding: 1.5rem 2rem;
+  padding: 1.25rem 1.5rem;
   border-bottom: 1px solid #e0e0e0;
   display: flex;
   justify-content: space-between;
   align-items: center;
   background: linear-gradient(135deg, #5691c4 0%, #3d6f9e 100%);
   color: white;
+  flex-shrink: 0;
 }
 
 .modal-header h2 {
   margin: 0;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: white;
 }
@@ -865,11 +869,13 @@ body::before {
 }
 
 .modal-body {
-  padding: 2rem;
+  padding: 1.5rem 2rem;
+  overflow-y: auto;
+  flex: 1;
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .form-group:last-child {
@@ -878,20 +884,20 @@ body::before {
 
 .form-group label {
   display: block;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.4rem;
   font-weight: 700;
   color: #3d6f9e;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
 .form-input {
   width: 100%;
-  padding: 0.75rem 1rem;
+  padding: 0.625rem 0.875rem;
   border: 2px solid #e0e0e0;
   border-radius: 8px;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-family: 'Roboto', sans-serif;
   transition: border-color 0.2s;
   background: white;
@@ -914,20 +920,21 @@ body::before {
 }
 
 .modal-footer {
-  padding: 1.5rem 2rem;
+  padding: 1rem 1.5rem;
   border-top: 1px solid #e0e0e0;
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
   background: #f5f5f5;
+  flex-shrink: 0;
 }
 
 .cancel-btn,
 .save-btn {
-  padding: 0.75rem 1.5rem;
+  padding: 0.625rem 1.25rem;
   border: none;
   border-radius: 8px;
-  font-size: 1rem;
+  font-size: 0.875rem;
   font-weight: 600;
   font-family: 'Roboto', sans-serif;
   cursor: pointer;
