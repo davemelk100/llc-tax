@@ -329,7 +329,6 @@ body::before {
   -webkit-backdrop-filter: blur(10px);
   padding: 0.5rem;
   z-index: 100;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .header-content {
