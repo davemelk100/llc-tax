@@ -78,11 +78,6 @@
               <div v-if="!editing" class="info-value">{{ profile.ein || 'Not provided' }}</div>
               <input v-else v-model="editForm.ein" type="text" class="form-input" />
             </div>
-            <div class="info-item full-width">
-              <label>Description</label>
-              <div v-if="!editing" class="info-value">{{ profile.description || 'Not provided' }}</div>
-              <textarea v-else v-model="editForm.description" class="form-input form-textarea" rows="3"></textarea>
-            </div>
           </div>
         </div>
 
@@ -123,8 +118,7 @@ const editForm = ref({
   email: '',
   website: '',
   formation_date: '',
-  ein: '',
-  description: ''
+  ein: ''
 });
 
 defineEmits(['close']);
@@ -157,8 +151,7 @@ const startEdit = () => {
     email: profile.value.email,
     website: profile.value.website,
     formation_date: profile.value.formation_date || '',
-    ein: profile.value.ein,
-    description: profile.value.description
+    ein: profile.value.ein
   };
 };
 
@@ -172,8 +165,7 @@ const cancelEdit = () => {
     email: '',
     website: '',
     formation_date: '',
-    ein: '',
-    description: ''
+    ein: ''
   };
 };
 
