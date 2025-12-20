@@ -127,8 +127,9 @@
                 </select>
               </div>
               <div v-if="isAddMode" class="form-group">
-                <label>FILE *</label>
-                <input type="file" @change="handleFileChange" class="form-input" accept=".pdf,.jpg,.jpeg,.png" />
+                <label>FILES * (You can select multiple)</label>
+                <input type="file" @change="handleMultipleFilesChange" class="form-input" accept=".pdf,.jpg,.jpeg,.png" multiple />
+                <p v-if="selectedFiles.length > 0" class="file-count">{{ selectedFiles.length }} file(s) selected</p>
               </div>
               <div v-else class="form-group">
                 <label>URL *</label>
@@ -181,7 +182,7 @@ const passcodeError = ref('');
 const showEditDialog = ref(false);
 const editingDocument = ref<ExpenseDocument | null>(null);
 const isAddMode = ref(false);
-const selectedFile = ref<File | null>(null);
+const selectedFiles = ref<File[]>([]);
 const saving = ref(false);
 const editForm = ref({
   category_id: '',
@@ -265,7 +266,7 @@ const loadData = async () => {
 const openAddDialog = (category: ExpenseCategory) => {
   isAddMode.value = true;
   editingDocument.value = null;
-  selectedFile.value = null;
+  selectedFiles.value = [];
   editForm.value.category_id = category.id;
   editForm.value.title = '';
   editForm.value.description = '';
@@ -279,7 +280,6 @@ const openAddDialog = (category: ExpenseCategory) => {
 const openEditDialog = (document: ExpenseDocument) => {
   isAddMode.value = false;
   editingDocument.value = document;
-  selectedFile.value = null;
   editForm.value.category_id = document.category_id;
   editForm.value.title = document.title;
   editForm.value.description = document.description;
@@ -290,10 +290,10 @@ const openEditDialog = (document: ExpenseDocument) => {
   showEditDialog.value = true;
 };
 
-const handleFileChange = (event: Event) => {
+const handleMultipleFilesChange = (event: Event) => {
   const target = event.target as HTMLInputElement;
   if (target.files && target.files.length > 0) {
-    selectedFile.value = target.files[0];
+    selectedFiles.value = Array.from(target.files);
   }
 };
 
@@ -301,7 +301,7 @@ const closeEditDialog = () => {
   showEditDialog.value = false;
   editingDocument.value = null;
   isAddMode.value = false;
-  selectedFile.value = null;
+  selectedFiles.value = [];
   editForm.value.category_id = '';
   editForm.value.title = '';
   editForm.value.description = '';
@@ -312,8 +312,8 @@ const closeEditDialog = () => {
 };
 
 const saveAdd = async () => {
-  if (!selectedFile.value) {
-    alert('Please select a file');
+  if (selectedFiles.value.length === 0) {
+    alert('Please select at least one file');
     return;
   }
 
@@ -324,17 +324,30 @@ const saveAdd = async () => {
 
   saving.value = true;
   try {
-    const uploadedUrl = await supabase.uploadFile(selectedFile.value);
+    const uploadedUrls = await supabase.uploadMultipleFiles(selectedFiles.value);
+    const firstUrl = uploadedUrls[0];
 
-    await supabase.createDocument({
+    const newDocument = await supabase.createDocument({
       category_id: editForm.value.category_id,
       title: editForm.value.title,
       description: editForm.value.description,
       document_type: editForm.value.document_type,
-      url: uploadedUrl,
+      url: firstUrl,
       amount: editForm.value.amount || undefined,
       date: editForm.value.date || new Date().toISOString().split('T')[0]
     });
+
+    for (let i = 0; i < selectedFiles.value.length; i++) {
+      const file = selectedFiles.value[i];
+      await supabase.createAttachment({
+        document_id: newDocument.id,
+        url: uploadedUrls[i],
+        file_name: file.name,
+        file_type: file.type,
+        file_size: file.size,
+        display_order: i
+      });
+    }
 
     await loadData();
     closeEditDialog();
@@ -856,6 +869,13 @@ body::before {
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+}
+
+.file-count {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: #3d6f9e;
+  font-weight: 500;
 }
 
 .form-input {
