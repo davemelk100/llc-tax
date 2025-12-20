@@ -2,6 +2,14 @@
   <div class="category-manager">
     <h2>Manage Categories</h2>
 
+    <ConfirmDialog
+      ref="confirmDialog"
+      title="Delete Category"
+      message="Are you sure you want to delete this category? All documents in this category will remain but will need to be reassigned."
+      confirm-text="Delete"
+      cancel-text="Cancel"
+    />
+
     <form @submit.prevent="handleSubmit" class="category-form" :class="{ editing: editingId }">
       <div class="form-group">
         <label>Category Name *</label>
@@ -81,6 +89,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import ConfirmDialog from '../ConfirmDialog.vue';
 import { useSupabase, type ExpenseCategory } from '../../composables/useSupabase';
 
 const emit = defineEmits<{
@@ -92,6 +101,7 @@ const categories = ref<ExpenseCategory[]>([]);
 const loading = ref(false);
 const error = ref('');
 const editingId = ref('');
+const confirmDialog = ref<InstanceType<typeof ConfirmDialog> | null>(null);
 
 const form = ref({
   name: '',
@@ -147,7 +157,10 @@ const editCategory = (category: ExpenseCategory) => {
 };
 
 const deleteCategory = async (id: string) => {
-  if (!confirm('Are you sure you want to delete this category?')) return;
+  if (!confirmDialog.value) return;
+
+  const confirmed = await confirmDialog.value.open();
+  if (!confirmed) return;
 
   loading.value = true;
   error.value = '';

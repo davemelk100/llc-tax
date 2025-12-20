@@ -2,6 +2,14 @@
   <div class="document-manager">
     <h2>Manage Documents</h2>
 
+    <ConfirmDialog
+      ref="confirmDialog"
+      title="Delete Document"
+      message="Are you sure you want to delete this document? This action cannot be undone."
+      confirm-text="Delete"
+      cancel-text="Cancel"
+    />
+
     <form @submit.prevent="handleSubmit" class="document-form" :class="{ editing: editingId }">
       <div class="form-group">
         <label>Category *</label>
@@ -172,6 +180,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import ConfirmDialog from '../ConfirmDialog.vue';
 import { useSupabase, type ExpenseCategory, type ExpenseDocument } from '../../composables/useSupabase';
 
 const emit = defineEmits<{
@@ -189,6 +198,7 @@ const uploadMode = ref<'url' | 'file'>('url');
 const uploadProgress = ref<number | null>(null);
 const selectedFile = ref<File | null>(null);
 const fileInput = ref<HTMLInputElement | null>(null);
+const confirmDialog = ref<InstanceType<typeof ConfirmDialog> | null>(null);
 
 const form = ref({
   categoryId: '',
@@ -287,7 +297,10 @@ const editDocument = (doc: ExpenseDocument) => {
 };
 
 const deleteDocument = async (id: string) => {
-  if (!confirm('Are you sure you want to delete this document?')) return;
+  if (!confirmDialog.value) return;
+
+  const confirmed = await confirmDialog.value.open();
+  if (!confirmed) return;
 
   loading.value = true;
   error.value = '';

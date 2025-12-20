@@ -154,6 +154,14 @@
             </div>
           </div>
         </div>
+
+      <ConfirmDialog
+        ref="confirmDialog"
+        title="Delete Document"
+        message="Are you sure you want to delete this document? This action cannot be undone."
+        confirm-text="Delete"
+        cancel-text="Cancel"
+      />
       </template>
     </template>
   </div>
@@ -164,6 +172,7 @@ import { ref, computed, onMounted } from 'vue';
 import ExpenseCard from './components/ExpenseCard.vue';
 import AdminPanel from './components/admin/AdminPanel.vue';
 import CompanyProfile from './components/CompanyProfile.vue';
+import ConfirmDialog from './components/ConfirmDialog.vue';
 import { useSupabase, type ExpenseCategory, type ExpenseDocument } from './composables/useSupabase';
 
 const CORRECT_PASSCODE = '6231839';
@@ -184,6 +193,7 @@ const editingDocument = ref<ExpenseDocument | null>(null);
 const isAddMode = ref(false);
 const selectedFile = ref<File | null>(null);
 const saving = ref(false);
+const confirmDialog = ref<InstanceType<typeof ConfirmDialog> | null>(null);
 const editForm = ref({
   category_id: '',
   title: '',
@@ -369,7 +379,10 @@ const saveEdit = async () => {
 };
 
 const handleDeleteDocument = async (document: ExpenseDocument) => {
-  if (!confirm(`Are you sure you want to delete "${document.title}"?`)) return;
+  if (!confirmDialog.value) return;
+
+  const confirmed = await confirmDialog.value.open();
+  if (!confirmed) return;
 
   loading.value = true;
   try {
