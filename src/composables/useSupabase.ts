@@ -175,7 +175,7 @@ export const useSupabase = () => {
     const { error: uploadError } = await supabase.storage
       .from('expense-documents')
       .upload(filePath, file, {
-        cacheControl: '3600',
+        cacheControl: '60',
         upsert: false
       });
 

@@ -3,4 +3,16 @@ import vue from '@vitejs/plugin-vue'
 
 export default defineConfig({
   plugins: [vue()],
+  server: {
+    headers: {
+      'Cache-Control': 'no-cache'
+    }
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: undefined
+      }
+    }
+  }
 })
