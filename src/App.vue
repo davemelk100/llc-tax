@@ -28,11 +28,25 @@
         @close="showProfile = false"
       />
 
+      <ReportsPage
+        v-else-if="showReports"
+        @close="showReports = false"
+      />
+
       <template v-else>
         <header class="app-header">
           <div class="header-content">
             <h1>Melkonian Industries LLC</h1>
             <div class="header-actions">
+              <button @click="showReports = true" class="reports-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+              </button>
               <button @click="showProfile = true" class="profile-btn">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
@@ -172,6 +186,7 @@ import { ref, computed, onMounted } from 'vue';
 import ExpenseCard from './components/ExpenseCard.vue';
 import AdminPanel from './components/admin/AdminPanel.vue';
 import CompanyProfile from './components/CompanyProfile.vue';
+import ReportsPage from './components/ReportsPage.vue';
 import ConfirmDialog from './components/ConfirmDialog.vue';
 import { useSupabase, type ExpenseCategory, type ExpenseDocument } from './composables/useSupabase';
 
@@ -185,6 +200,7 @@ const loading = ref(false);
 const error = ref('');
 const showAdmin = ref(false);
 const showProfile = ref(false);
+const showReports = ref(false);
 const isAuthenticated = ref(false);
 const passcodeInput = ref('');
 const passcodeError = ref('');
@@ -487,6 +503,7 @@ body::before {
   gap: 0.75rem;
 }
 
+.reports-btn,
 .profile-btn,
 .admin-btn,
 .logout-btn {
@@ -505,6 +522,7 @@ body::before {
   transition: all 0.2s;
 }
 
+.reports-btn:hover,
 .profile-btn:hover,
 .admin-btn:hover,
 .logout-btn:hover {
