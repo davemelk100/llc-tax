@@ -48,15 +48,15 @@
             <div v-for="attachment in getAttachments(doc.id)" :key="attachment.id" class="attachment-item">
               <div class="attachment-name">{{ attachment.file_name }}</div>
               <div class="attachment-actions">
-                <a :href="attachment.url" target="_blank" rel="noopener noreferrer" class="icon-btn-small" title="Open">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <a :href="attachment.url" target="_blank" rel="noopener noreferrer" class="icon-btn-small" title="Open PDF">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
                     <polyline points="15 3 21 3 21 9"></polyline>
                     <line x1="10" y1="14" x2="21" y2="3"></line>
                   </svg>
                 </a>
-                <a :href="attachment.url" :download="attachment.file_name" class="icon-btn-small" title="Download">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <a :href="attachment.url" :download="attachment.file_name" class="icon-btn-small" title="Download PDF">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                     <polyline points="7 10 12 15 17 10"></polyline>
                     <line x1="12" y1="15" x2="12" y2="3"></line>
@@ -90,6 +90,9 @@ const loadAttachments = async () => {
     try {
       const attachments = await supabase.getAttachments(doc.id);
       attachmentsMap.value[doc.id] = attachments;
+      if (attachments.length > 0) {
+        console.log('Loaded attachments for', doc.title, ':', attachments);
+      }
     } catch (error) {
       console.error('Failed to load attachments for document', doc.id, error);
     }
@@ -256,28 +259,32 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5rem 0.75rem;
-  background: rgba(255, 255, 255, 0.15);
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
   transition: all 0.2s ease;
 }
 
 .attachment-item:hover {
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(74, 139, 184, 0.5);
 }
 
 .attachment-name {
   flex: 1;
-  font-size: 14px;
+  font-size: 15px;
   color: #000000;
-  font-weight: 300;
+  font-weight: 500;
+  margin-right: 1rem;
 }
 
 .attachment-actions {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.75rem;
+  flex-shrink: 0;
 }
 
 .attachment-count {
@@ -302,22 +309,24 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem;
-  background: rgba(255, 255, 255, 0.4);
+  padding: 0.6rem;
+  background: rgba(255, 255, 255, 0.6);
   color: #2d2d2d;
   text-decoration: none;
-  border-radius: 6px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  border: 2px solid rgba(74, 139, 184, 0.3);
   transition: all 0.2s ease;
   cursor: pointer;
+  min-width: 36px;
+  min-height: 36px;
 }
 
 .icon-btn-small:hover {
-  background: rgba(74, 139, 184, 0.8);
+  background: rgba(74, 139, 184, 0.9);
   color: #ffffff;
   border-color: rgba(74, 139, 184, 1);
   transform: translateY(-2px);
-  box-shadow: 0 2px 8px rgba(74, 139, 184, 0.3);
+  box-shadow: 0 4px 12px rgba(74, 139, 184, 0.4);
 }
 
 .document-info {
