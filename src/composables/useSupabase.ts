@@ -27,6 +27,21 @@ export interface ExpenseDocument {
   updated_at: string;
 }
 
+export interface CompanyProfile {
+  id: string;
+  filing_number: string;
+  company_name: string;
+  address: string;
+  phone: string;
+  email: string;
+  website: string;
+  formation_date: string | null;
+  ein: string;
+  description: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export const useSupabase = () => {
   const getCategories = async (): Promise<ExpenseCategory[]> => {
     const { data, error } = await supabase
@@ -188,6 +203,34 @@ export const useSupabase = () => {
     return data.publicUrl;
   };
 
+  const getCompanyProfile = async (): Promise<CompanyProfile | null> => {
+    const { data, error } = await supabase
+      .from('company_profile')
+      .select('*')
+      .maybeSingle();
+
+    if (error) throw new Error(error.message);
+    return data;
+  };
+
+  const updateCompanyProfile = async (
+    id: string,
+    input: Partial<Omit<CompanyProfile, 'id' | 'created_at' | 'updated_at'>>
+  ): Promise<CompanyProfile> => {
+    const { data, error } = await supabase
+      .from('company_profile')
+      .update({
+        ...input,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) throw new Error(error.message);
+    return data;
+  };
+
   return {
     getCategories,
     getDocuments,
@@ -198,5 +241,7 @@ export const useSupabase = () => {
     updateDocument,
     deleteDocument,
     uploadFile,
+    getCompanyProfile,
+    updateCompanyProfile,
   };
 };

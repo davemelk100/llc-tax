@@ -23,10 +23,22 @@
         @updated="loadData"
       />
 
+      <CompanyProfile
+        v-else-if="showProfile"
+        @close="showProfile = false"
+      />
+
       <template v-else>
         <header class="app-header">
           <div class="header-content">
             <h1>Melkonian Industries LLC</h1>
+            <button @click="showProfile = true" class="profile-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              Company Profile
+            </button>
           </div>
         </header>
 
@@ -139,6 +151,7 @@
 import { ref, computed, onMounted } from 'vue';
 import ExpenseCard from './components/ExpenseCard.vue';
 import AdminPanel from './components/admin/AdminPanel.vue';
+import CompanyProfile from './components/CompanyProfile.vue';
 import { useSupabase, type ExpenseCategory, type ExpenseDocument } from './composables/useSupabase';
 
 const CORRECT_PASSCODE = '6231839';
@@ -150,6 +163,7 @@ const documents = ref<ExpenseDocument[]>([]);
 const loading = ref(false);
 const error = ref('');
 const showAdmin = ref(false);
+const showProfile = ref(false);
 const isAuthenticated = ref(false);
 const passcodeInput = ref('');
 const passcodeError = ref('');
@@ -404,7 +418,9 @@ body::before {
 }
 
 .header-content {
-  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   max-width: 1400px;
   width: 100%;
   margin: 0 auto;
@@ -412,12 +428,35 @@ body::before {
 }
 
 .header-content h1 {
-  display: inline-block;
   margin: 0;
   font-size: 48px;
   color: #6395c1;
   text-shadow: rgba(99, 149, 193, 0.9) -1px -1px 1px, rgba(0, 0, 0, 0.2) 1px 1px 2px, rgba(99, 149, 193, 0.5) 0px 0px 1px;
   text-transform: uppercase;
+}
+
+.profile-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: 'Roboto', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.profile-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .admin-link {
@@ -639,10 +678,18 @@ body::before {
 @media (max-width: 640px) {
   .header-content {
     padding: 0 1rem;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
   }
 
   .header-content h1 {
     font-size: 28px;
+  }
+
+  .profile-btn {
+    width: 100%;
+    justify-content: center;
   }
 
   .app-main {
