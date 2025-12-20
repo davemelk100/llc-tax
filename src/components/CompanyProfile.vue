@@ -200,7 +200,7 @@ onMounted(() => {
 .profile-page {
   min-height: 100vh;
   padding: 2rem;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
 }
 
