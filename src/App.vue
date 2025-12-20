@@ -451,10 +451,9 @@ body::before {
   align-items: center;
   justify-content: center;
   padding: 0.75rem;
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
+  background: transparent;
   color: white;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: none;
   border-radius: 10px;
   font-size: 1rem;
   font-weight: 500;
@@ -465,9 +464,8 @@ body::before {
 
 .profile-btn:hover,
 .admin-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.15);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .passcode-screen {
