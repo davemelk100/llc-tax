@@ -48,6 +48,7 @@
             :category="category"
             :documents="getDocumentsForCategory(category.id)"
             @edit-document="openEditDialog"
+            @add-document="openAddDialog"
           />
         </div>
 
@@ -73,13 +74,13 @@
         <div v-if="showEditDialog" class="modal-overlay" @click="closeEditDialog">
           <div class="modal-content" @click.stop>
             <div class="modal-header">
-              <h2>Manage Documents</h2>
+              <h2>{{ isAddMode ? 'Add New Expense' : 'Manage Documents' }}</h2>
               <button @click="closeEditDialog" class="close-btn">&times;</button>
             </div>
             <div class="modal-body">
               <div class="form-group">
                 <label>CATEGORY *</label>
-                <select v-model="editForm.category_id" class="form-input" disabled>
+                <select v-model="editForm.category_id" class="form-input" :disabled="!isAddMode">
                   <option v-for="cat in categories" :key="cat.id" :value="cat.id">
                     {{ cat.name }}
                   </option>
@@ -102,7 +103,11 @@
                   <option value="other">Other</option>
                 </select>
               </div>
-              <div class="form-group">
+              <div v-if="isAddMode" class="form-group">
+                <label>FILE *</label>
+                <input type="file" @change="handleFileChange" class="form-input" accept=".pdf,.jpg,.jpeg,.png" />
+              </div>
+              <div v-else class="form-group">
                 <label>URL *</label>
                 <input v-model="editForm.url" type="text" class="form-input" />
               </div>
@@ -119,7 +124,9 @@
             </div>
             <div class="modal-footer">
               <button @click="closeEditDialog" class="cancel-btn">CANCEL</button>
-              <button @click="saveEdit" class="save-btn">UPDATE DOCUMENT</button>
+              <button @click="isAddMode ? saveAdd() : saveEdit()" class="save-btn" :disabled="saving">
+                {{ saving ? 'SAVING...' : (isAddMode ? 'ADD EXPENSE' : 'UPDATE DOCUMENT') }}
+              </button>
             </div>
           </div>
         </div>
@@ -148,6 +155,9 @@ const passcodeInput = ref('');
 const passcodeError = ref('');
 const showEditDialog = ref(false);
 const editingDocument = ref<ExpenseDocument | null>(null);
+const isAddMode = ref(false);
+const selectedFile = ref<File | null>(null);
+const saving = ref(false);
 const editForm = ref({
   category_id: '',
   title: '',
@@ -220,8 +230,24 @@ const loadData = async () => {
   }
 };
 
+const openAddDialog = (category: ExpenseCategory) => {
+  isAddMode.value = true;
+  editingDocument.value = null;
+  selectedFile.value = null;
+  editForm.value.category_id = category.id;
+  editForm.value.title = '';
+  editForm.value.description = '';
+  editForm.value.document_type = 'PDF';
+  editForm.value.url = '';
+  editForm.value.amount = 0;
+  editForm.value.date = new Date().toISOString().split('T')[0];
+  showEditDialog.value = true;
+};
+
 const openEditDialog = (document: ExpenseDocument) => {
+  isAddMode.value = false;
   editingDocument.value = document;
+  selectedFile.value = null;
   editForm.value.category_id = document.category_id;
   editForm.value.title = document.title;
   editForm.value.description = document.description;
@@ -232,9 +258,18 @@ const openEditDialog = (document: ExpenseDocument) => {
   showEditDialog.value = true;
 };
 
+const handleFileChange = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  if (target.files && target.files.length > 0) {
+    selectedFile.value = target.files[0];
+  }
+};
+
 const closeEditDialog = () => {
   showEditDialog.value = false;
   editingDocument.value = null;
+  isAddMode.value = false;
+  selectedFile.value = null;
   editForm.value.category_id = '';
   editForm.value.title = '';
   editForm.value.description = '';
@@ -244,9 +279,44 @@ const closeEditDialog = () => {
   editForm.value.date = '';
 };
 
+const saveAdd = async () => {
+  if (!selectedFile.value) {
+    alert('Please select a file');
+    return;
+  }
+
+  if (!editForm.value.title.trim()) {
+    alert('Please enter a title');
+    return;
+  }
+
+  saving.value = true;
+  try {
+    const uploadedUrl = await supabase.uploadFile(selectedFile.value);
+
+    await supabase.createDocument({
+      category_id: editForm.value.category_id,
+      title: editForm.value.title,
+      description: editForm.value.description,
+      document_type: editForm.value.document_type,
+      url: uploadedUrl,
+      amount: editForm.value.amount || undefined,
+      date: editForm.value.date || new Date().toISOString().split('T')[0]
+    });
+
+    await loadData();
+    closeEditDialog();
+  } catch (e: any) {
+    alert('Failed to add expense: ' + (e.message || 'Unknown error'));
+  } finally {
+    saving.value = false;
+  }
+};
+
 const saveEdit = async () => {
   if (!editingDocument.value) return;
 
+  saving.value = true;
   try {
     await supabase.updateDocument(editingDocument.value.id, {
       title: editForm.value.title,
@@ -260,6 +330,8 @@ const saveEdit = async () => {
     closeEditDialog();
   } catch (e: any) {
     alert('Failed to update document: ' + (e.message || 'Unknown error'));
+  } finally {
+    saving.value = false;
   }
 };
 

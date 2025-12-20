@@ -1,8 +1,18 @@
 <template>
   <div class="expense-card">
     <div class="card-header">
-      <h2>{{ category.name }}</h2>
-      <p v-if="category.description" class="description">{{ category.description }}</p>
+      <div class="header-content">
+        <div>
+          <h2>{{ category.name }}</h2>
+          <p v-if="category.description" class="description">{{ category.description }}</p>
+        </div>
+        <button @click="$emit('add-document', category)" class="add-btn" title="Add expense">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </button>
+      </div>
     </div>
     <div class="card-body">
       <div v-if="documents.length === 0" class="no-documents">
@@ -75,6 +85,15 @@ defineProps<{
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   position: relative;
   overflow: hidden;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  position: relative;
+  z-index: 1;
 }
 
 .card-header::after {
@@ -200,6 +219,30 @@ defineProps<{
 .icon-btn:hover {
   color: rgba(74, 139, 184, 1);
   transform: translateY(-2px);
+}
+
+.add-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.add-btn:hover {
+  background: rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 @media (max-width: 768px) {
