@@ -72,7 +72,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import type { ExpenseCategory, ExpenseDocument, DocumentAttachment } from '../composables/useSupabase';
 import { useSupabase } from '../composables/useSupabase';
 
@@ -111,6 +111,10 @@ const isExpanded = (docId: string) => {
 const getAttachments = (docId: string): DocumentAttachment[] => {
   return attachmentsMap.value[docId] || [];
 };
+
+watch(() => props.documents, () => {
+  loadAttachments();
+}, { deep: true });
 
 onMounted(() => {
   loadAttachments();

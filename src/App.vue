@@ -131,9 +131,16 @@
                 <input type="file" @change="handleMultipleFilesChange" class="form-input" accept=".pdf,.jpg,.jpeg,.png" multiple />
                 <p v-if="selectedFiles.length > 0" class="file-count">{{ selectedFiles.length }} file(s) selected</p>
               </div>
-              <div v-else class="form-group">
-                <label>URL *</label>
-                <input v-model="editForm.url" type="text" class="form-input" />
+              <div v-else>
+                <div class="form-group">
+                  <label>URL *</label>
+                  <input v-model="editForm.url" type="text" class="form-input" />
+                </div>
+                <div class="form-group">
+                  <label>ADD MORE FILES (Optional)</label>
+                  <input type="file" @change="handleMultipleFilesChange" class="form-input" accept=".pdf,.jpg,.jpeg,.png" multiple />
+                  <p v-if="selectedFiles.length > 0" class="file-count">{{ selectedFiles.length }} file(s) selected to add</p>
+                </div>
               </div>
               <div class="form-row">
                 <div class="form-group">
@@ -371,6 +378,27 @@ const saveEdit = async () => {
       amount: editForm.value.amount,
       date: editForm.value.date
     });
+
+    if (selectedFiles.value.length > 0) {
+      const uploadedUrls = await supabase.uploadMultipleFiles(selectedFiles.value);
+      const existingAttachments = await supabase.getAttachments(editingDocument.value.id);
+      const maxOrder = existingAttachments.length > 0
+        ? Math.max(...existingAttachments.map(a => a.display_order))
+        : -1;
+
+      for (let i = 0; i < selectedFiles.value.length; i++) {
+        const file = selectedFiles.value[i];
+        await supabase.createAttachment({
+          document_id: editingDocument.value.id,
+          url: uploadedUrls[i],
+          file_name: file.name,
+          file_type: file.type,
+          file_size: file.size,
+          display_order: maxOrder + i + 1
+        });
+      }
+    }
+
     await loadData();
     closeEditDialog();
   } catch (e: any) {
