@@ -44,6 +44,13 @@
                   <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
                 </svg>
               </button>
+              <button @click="logout" class="logout-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                  <polyline points="16 17 21 12 16 7"></polyline>
+                  <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+              </button>
             </div>
           </div>
         </header>
@@ -215,6 +222,13 @@ const checkPasscode = () => {
     passcodeError.value = 'Incorrect passcode';
     passcodeInput.value = '';
   }
+};
+
+const logout = () => {
+  localStorage.removeItem(AUTH_KEY);
+  isAuthenticated.value = false;
+  passcodeInput.value = '';
+  passcodeError.value = '';
 };
 
 const sortedCategories = computed(() => {
@@ -446,7 +460,8 @@ body::before {
 }
 
 .profile-btn,
-.admin-btn {
+.admin-btn,
+.logout-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -463,7 +478,8 @@ body::before {
 }
 
 .profile-btn:hover,
-.admin-btn:hover {
+.admin-btn:hover,
+.logout-btn:hover {
   background: rgba(255, 255, 255, 0.15);
   transform: translateY(-2px);
 }
