@@ -286,7 +286,7 @@ defineProps<{
 
   .icon-actions {
     width: 100%;
-    justify-content: flex-end;
+    justify-content: flex-start;
   }
 
   .icon-btn {
