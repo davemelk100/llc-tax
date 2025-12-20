@@ -245,6 +245,25 @@ defineProps<{
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
+@media (max-width: 1024px) {
+  .document-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+
+  .doc-amount {
+    margin-right: 0;
+    align-self: flex-start;
+  }
+
+  .icon-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+
 @media (max-width: 640px) {
   .card-header {
     padding: 1rem;
@@ -267,26 +286,12 @@ defineProps<{
     font-size: 0.9rem;
   }
 
-  .document-item {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.75rem;
-    padding: 1rem;
-  }
-
   .document-info h3 {
     font-size: 16px;
   }
 
   .doc-amount {
     font-size: 16px;
-    margin-right: 0;
-    align-self: flex-start;
-  }
-
-  .icon-actions {
-    width: 100%;
-    justify-content: flex-end;
   }
 
   .icon-btn {
