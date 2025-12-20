@@ -490,8 +490,8 @@ body::before {
 }
 
 .expenses-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 2rem;
 }
 
