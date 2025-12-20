@@ -49,14 +49,14 @@
               <div class="attachment-name">{{ attachment.file_name }}</div>
               <div class="attachment-actions">
                 <a :href="attachment.url" target="_blank" rel="noopener noreferrer" class="icon-btn-small" title="Open">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
                     <polyline points="15 3 21 3 21 9"></polyline>
                     <line x1="10" y1="14" x2="21" y2="3"></line>
                   </svg>
                 </a>
                 <a :href="attachment.url" :download="attachment.file_name" class="icon-btn-small" title="Download">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                     <polyline points="7 10 12 15 17 10"></polyline>
                     <line x1="12" y1="15" x2="12" y2="3"></line>
@@ -303,18 +303,21 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   padding: 0.5rem;
-  background: transparent;
-  color: #000000;
+  background: rgba(255, 255, 255, 0.4);
+  color: #2d2d2d;
   text-decoration: none;
   border-radius: 6px;
-  border: none;
+  border: 1px solid rgba(0, 0, 0, 0.1);
   transition: all 0.2s ease;
   cursor: pointer;
 }
 
 .icon-btn-small:hover {
-  color: rgba(74, 139, 184, 1);
+  background: rgba(74, 139, 184, 0.8);
+  color: #ffffff;
+  border-color: rgba(74, 139, 184, 1);
   transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(74, 139, 184, 0.3);
 }
 
 .document-info {
