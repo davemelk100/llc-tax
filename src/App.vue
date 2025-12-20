@@ -605,7 +605,6 @@ body::before {
   background: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(20px);
   border-radius: 16px;
-  border: 2px solid rgba(255, 255, 255, 0.4);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15),
               inset 0 1px 0 rgba(255, 255, 255, 0.6);
   overflow: hidden;
