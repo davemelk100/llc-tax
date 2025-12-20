@@ -26,6 +26,7 @@
       <CompanyProfile
         v-else-if="showProfile"
         @close="showProfile = false"
+        @open-admin="showProfile = false; showAdmin = true"
       />
 
       <template v-else>
@@ -79,8 +80,6 @@
       <footer class="app-footer">
         <p>&copy; {{ currentYear }} Melkonian Industries LLC. All rights reserved.</p>
       </footer>
-
-        <a href="#" @click.prevent="showAdmin = true" class="admin-link">A</a>
 
         <div v-if="showEditDialog" class="modal-overlay" @click="closeEditDialog">
           <div class="modal-content" @click.stop>
@@ -455,21 +454,6 @@ body::before {
   background: rgba(255, 255, 255, 0.3);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.admin-link {
-  position: fixed;
-  bottom: 1rem;
-  right: 1rem;
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.6);
-  text-decoration: none;
-  z-index: 1000;
-  transition: color 0.2s;
-}
-
-.admin-link:hover {
-  color: rgba(255, 255, 255, 0.9);
 }
 
 .passcode-screen {

@@ -8,7 +8,14 @@
         </svg>
         Back to Expenses
       </button>
-      <h1>Company Profile</h1>
+      <div class="title-row">
+        <h1>Company Profile</h1>
+        <button @click="$emit('open-admin')" class="admin-btn" title="Admin Panel">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+          </svg>
+        </button>
+      </div>
     </div>
 
     <div v-if="loading" class="loading-state">
@@ -121,7 +128,7 @@ const editForm = ref({
   ein: ''
 });
 
-defineEmits(['close']);
+defineEmits(['close', 'open-admin']);
 
 const formatDate = (dateString: string) => {
   const date = new Date(dateString);
@@ -225,11 +232,38 @@ onMounted(() => {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
 .profile-header h1 {
   font-size: 3rem;
   color: white;
   margin: 0;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.admin-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.admin-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .loading-state,
