@@ -25,6 +25,7 @@
 
       <CompanyProfile
         v-else-if="showProfile"
+        :isAuthenticated="isAuthenticated"
         @close="showProfile = false"
       />
 

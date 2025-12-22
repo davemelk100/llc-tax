@@ -81,7 +81,7 @@
           </div>
         </div>
 
-        <div class="card-actions">
+        <div class="card-actions" v-if="isAuthenticated">
           <button v-if="!editing" @click="startEdit" class="edit-btn">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
@@ -104,6 +104,10 @@
 import { ref, onMounted } from 'vue';
 import { useSupabase, type CompanyProfile } from '../composables/useSupabase';
 
+const props = defineProps<{
+  isAuthenticated: boolean;
+}>();
+
 const supabase = useSupabase();
 const profile = ref<CompanyProfile | null>(null);
 const loading = ref(false);
@@ -121,6 +125,21 @@ const editForm = ref({
   ein: ''
 });
 
+const demoProfile: CompanyProfile = {
+  id: 'demo-profile',
+  company_name: 'Melkonian Industries LLC',
+  filing_number: 'LLC-2019-123456',
+  address: '742 Evergreen Terrace, Springfield, IL 62701',
+  phone: '(555) 867-5309',
+  email: 'contact@melkonianindustries.com',
+  website: 'www.melkonianindustries.com',
+  formation_date: '2019-03-15',
+  ein: '12-3456789',
+  description: 'A family-owned business specializing in industrial manufacturing and distribution',
+  created_at: '',
+  updated_at: ''
+};
+
 defineEmits(['close']);
 
 const formatDate = (dateString: string) => {
@@ -129,6 +148,11 @@ const formatDate = (dateString: string) => {
 };
 
 const loadProfile = async () => {
+  if (!props.isAuthenticated) {
+    profile.value = demoProfile;
+    return;
+  }
+
   loading.value = true;
   error.value = '';
   try {
@@ -141,7 +165,7 @@ const loadProfile = async () => {
 };
 
 const startEdit = () => {
-  if (!profile.value) return;
+  if (!props.isAuthenticated || !profile.value) return;
   editing.value = true;
   editForm.value = {
     company_name: profile.value.company_name,
