@@ -93,6 +93,8 @@
             @edit-document="openEditDialog"
             @add-document="openAddDialog"
             @delete-document="handleDeleteDocument"
+            @open-document="handleOpenDocument"
+            @download-document="handleDownloadDocument"
           />
         </div>
 
@@ -180,6 +182,8 @@
         confirm-text="Delete"
         cancel-text="Cancel"
       />
+
+      <DemoModal ref="demoModal" />
       </template>
     </template>
   </div>
@@ -192,6 +196,7 @@ import AdminPanel from './admin/AdminPanel.vue';
 import CompanyProfile from './CompanyProfile.vue';
 import ReportsPage from './ReportsPage.vue';
 import ConfirmDialog from './ConfirmDialog.vue';
+import DemoModal from './DemoModal.vue';
 import { useSupabase, type ExpenseCategory, type ExpenseDocument } from '../composables/useSupabase';
 
 const CORRECT_PASSCODE = '6742727';
@@ -214,6 +219,7 @@ const isAddMode = ref(false);
 const selectedFile = ref<File | null>(null);
 const saving = ref(false);
 const confirmDialog = ref<InstanceType<typeof ConfirmDialog> | null>(null);
+const demoModal = ref<InstanceType<typeof DemoModal> | null>(null);
 const editForm = ref({
   category_id: '',
   title: '',
@@ -412,6 +418,18 @@ const handleDeleteDocument = async (document: ExpenseDocument) => {
     alert('Failed to delete document: ' + (e.message || 'Unknown error'));
   } finally {
     loading.value = false;
+  }
+};
+
+const handleOpenDocument = () => {
+  if (demoModal.value) {
+    demoModal.value.open('In a live environment, the PDF would open in a new browser tab.');
+  }
+};
+
+const handleDownloadDocument = () => {
+  if (demoModal.value) {
+    demoModal.value.open('In a live environment, the PDF would be downloaded to your device.');
   }
 };
 
