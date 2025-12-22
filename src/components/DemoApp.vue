@@ -1,47 +1,30 @@
 <template>
   <div class="app">
-    <div v-if="!isAuthenticated" class="passcode-screen">
-      <div class="passcode-card">
-        <div class="demo-badge">DEMO VERSION</div>
-        <h2>Enter Demo Passcode</h2>
-        <input
-          v-model="passcodeInput"
-          type="password"
-          placeholder="Enter passcode"
-          @keyup.enter="checkPasscode"
-          class="passcode-input"
-          autofocus
-        />
-        <p v-if="passcodeError" class="passcode-error">{{ passcodeError }}</p>
-        <button @click="checkPasscode" class="passcode-btn">Submit</button>
-      </div>
-    </div>
+    <AdminPanel
+      v-if="showAdmin && isAuthenticated"
+      @close="showAdmin = false"
+      @updated="loadData"
+    />
+
+    <CompanyProfile
+      v-else-if="showProfile && isAuthenticated"
+      @close="showProfile = false"
+    />
+
+    <ReportsPage
+      v-else-if="showReports && isAuthenticated"
+      @close="showReports = false"
+    />
 
     <template v-else>
-      <AdminPanel
-        v-if="showAdmin"
-        @close="showAdmin = false"
-        @updated="loadData"
-      />
-
-      <CompanyProfile
-        v-else-if="showProfile"
-        @close="showProfile = false"
-      />
-
-      <ReportsPage
-        v-else-if="showReports"
-        @close="showReports = false"
-      />
-
-      <template v-else>
-        <header class="app-header">
-          <div class="header-content">
-            <div class="header-title">
-              <h1>Melkonian Industries LLC</h1>
-              <span class="demo-label">DEMO</span>
-            </div>
-            <div class="header-actions">
+      <header class="app-header">
+        <div class="header-content">
+          <div class="header-title">
+            <h1>Melkonian Industries LLC</h1>
+            <span class="demo-label">DEMO</span>
+          </div>
+          <div class="header-actions">
+            <template v-if="isAuthenticated">
               <button @click="showReports = true" class="reports-btn">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -69,9 +52,20 @@
                   <line x1="21" y1="12" x2="9" y2="12"></line>
                 </svg>
               </button>
-            </div>
+            </template>
+            <template v-else>
+              <button @click="showPasscodeModal = true" class="signin-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                  <polyline points="10 17 15 12 10 7"></polyline>
+                  <line x1="15" y1="12" x2="3" y2="12"></line>
+                </svg>
+                <span>Sign In</span>
+              </button>
+            </template>
           </div>
-        </header>
+        </div>
+      </header>
 
         <main class="app-main">
         <div v-if="loading" class="loading-state">
@@ -184,8 +178,32 @@
       />
 
       <DemoModal ref="demoModal" />
+
+      <div v-if="showPasscodeModal" class="modal-overlay" @click="closePasscodeModal">
+        <div class="modal-content passcode-modal" @click.stop>
+          <div class="modal-header">
+            <h2>Sign In</h2>
+            <button @click="closePasscodeModal" class="close-btn">&times;</button>
+          </div>
+          <div class="modal-body">
+            <p class="passcode-instructions">Enter your passcode to access live data</p>
+            <input
+              v-model="passcodeInput"
+              type="password"
+              placeholder="Enter passcode"
+              @keyup.enter="checkPasscode"
+              class="form-input passcode-input"
+              autofocus
+            />
+            <p v-if="passcodeError" class="passcode-error">{{ passcodeError }}</p>
+          </div>
+          <div class="modal-footer">
+            <button @click="closePasscodeModal" class="cancel-btn">CANCEL</button>
+            <button @click="checkPasscode" class="save-btn">SIGN IN</button>
+          </div>
+        </div>
+      </div>
       </template>
-    </template>
   </div>
 </template>
 
@@ -213,6 +231,7 @@ const showReports = ref(false);
 const isAuthenticated = ref(false);
 const passcodeInput = ref('');
 const passcodeError = ref('');
+const showPasscodeModal = ref(false);
 const showEditDialog = ref(false);
 const editingDocument = ref<ExpenseDocument | null>(null);
 const isAddMode = ref(false);
@@ -231,6 +250,19 @@ const editForm = ref({
 });
 
 const currentYear = new Date().getFullYear();
+
+const demoCategories: ExpenseCategory[] = [
+  { id: 'demo-1', name: 'Transportation', description: 'Vehicle and travel expenses', display_order: 1, created_at: '', updated_at: '' },
+  { id: 'demo-2', name: 'Office Supplies', description: 'General office materials', display_order: 2, created_at: '', updated_at: '' },
+  { id: 'demo-3', name: 'Equipment', description: 'Tools and equipment', display_order: 3, created_at: '', updated_at: '' },
+];
+
+const demoDocuments: ExpenseDocument[] = [
+  { id: 'doc-1', category_id: 'demo-1', title: 'Gas Receipt - March', description: 'Monthly fuel expenses', document_type: 'PDF', url: '#', amount: 245.50, date: '2024-03-15', created_at: '', updated_at: '' },
+  { id: 'doc-2', category_id: 'demo-1', title: 'Maintenance Invoice', description: 'Vehicle service', document_type: 'PDF', url: '#', amount: 450.00, date: '2024-03-20', created_at: '', updated_at: '' },
+  { id: 'doc-3', category_id: 'demo-2', title: 'Office Depot Order', description: 'Paper and supplies', document_type: 'PDF', url: '#', amount: 127.85, date: '2024-03-10', created_at: '', updated_at: '' },
+  { id: 'doc-4', category_id: 'demo-3', title: 'Power Drill Purchase', description: 'Dewalt cordless drill', document_type: 'PDF', url: '#', amount: 189.99, date: '2024-03-12', created_at: '', updated_at: '' },
+];
 
 const checkExistingAuth = () => {
   const authData = localStorage.getItem(AUTH_KEY);
@@ -254,6 +286,8 @@ const checkPasscode = () => {
     isAuthenticated.value = true;
     passcodeError.value = '';
     localStorage.setItem(AUTH_KEY, new Date().toISOString());
+    showPasscodeModal.value = false;
+    passcodeInput.value = '';
     loadData();
   } else {
     passcodeError.value = 'Incorrect passcode';
@@ -261,11 +295,18 @@ const checkPasscode = () => {
   }
 };
 
+const closePasscodeModal = () => {
+  showPasscodeModal.value = false;
+  passcodeInput.value = '';
+  passcodeError.value = '';
+};
+
 const logout = () => {
   localStorage.removeItem(AUTH_KEY);
   isAuthenticated.value = false;
   passcodeInput.value = '';
   passcodeError.value = '';
+  loadData();
 };
 
 const sortedCategories = computed(() => {
@@ -285,6 +326,12 @@ const totalDocuments = computed(() => {
 });
 
 const loadData = async () => {
+  if (!isAuthenticated.value) {
+    categories.value = demoCategories;
+    documents.value = demoDocuments;
+    return;
+  }
+
   loading.value = true;
   error.value = '';
   try {
@@ -300,6 +347,13 @@ const loadData = async () => {
 };
 
 const openAddDialog = (category: ExpenseCategory) => {
+  if (!isAuthenticated.value) {
+    if (demoModal.value) {
+      demoModal.value.open('Sign in to add expenses to your account.');
+    }
+    return;
+  }
+
   isAddMode.value = true;
   editingDocument.value = null;
   selectedFile.value = null;
@@ -314,6 +368,13 @@ const openAddDialog = (category: ExpenseCategory) => {
 };
 
 const openEditDialog = (document: ExpenseDocument) => {
+  if (!isAuthenticated.value) {
+    if (demoModal.value) {
+      demoModal.value.open('Sign in to edit expenses in your account.');
+    }
+    return;
+  }
+
   isAddMode.value = false;
   editingDocument.value = document;
   selectedFile.value = null;
@@ -405,6 +466,13 @@ const saveEdit = async () => {
 };
 
 const handleDeleteDocument = async (document: ExpenseDocument) => {
+  if (!isAuthenticated.value) {
+    if (demoModal.value) {
+      demoModal.value.open('Sign in to delete expenses from your account.');
+    }
+    return;
+  }
+
   if (!confirmDialog.value) return;
 
   const confirmed = await confirmDialog.value.open();
@@ -435,9 +503,7 @@ const handleDownloadDocument = () => {
 
 onMounted(() => {
   checkExistingAuth();
-  if (isAuthenticated.value) {
-    loadData();
-  }
+  loadData();
 });
 </script>
 
@@ -518,10 +584,12 @@ onMounted(() => {
 .reports-btn,
 .profile-btn,
 .admin-btn,
-.logout-btn {
+.logout-btn,
+.signin-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 0.5rem;
   padding: 0.75rem;
   background: transparent;
   color: white;
@@ -534,12 +602,22 @@ onMounted(() => {
   transition: all 0.2s;
 }
 
+.signin-btn {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.75rem 1.25rem;
+}
+
 .reports-btn:hover,
 .profile-btn:hover,
 .admin-btn:hover,
-.logout-btn:hover {
+.logout-btn:hover,
+.signin-btn:hover {
   background: rgba(255, 255, 255, 0.15);
   transform: translateY(-2px);
+}
+
+.signin-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .passcode-screen {
@@ -998,5 +1076,22 @@ onMounted(() => {
 .save-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(86, 145, 196, 0.4);
+}
+
+.passcode-modal {
+  max-width: 400px;
+}
+
+.passcode-instructions {
+  margin-bottom: 1rem;
+  color: #666;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+.passcode-input {
+  text-align: center;
+  letter-spacing: 0.25rem;
+  font-size: 1.125rem;
 }
 </style>
