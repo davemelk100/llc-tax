@@ -13,6 +13,7 @@
         />
         <p v-if="passcodeError" class="passcode-error">{{ passcodeError }}</p>
         <button @click="checkPasscode" class="passcode-btn">Submit</button>
+        <button @click="goToDemo" class="demo-btn">View Demo</button>
       </div>
     </div>
 
@@ -188,6 +189,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import ExpenseCard from './ExpenseCard.vue';
 import AdminPanel from './admin/AdminPanel.vue';
 import CompanyProfile from './CompanyProfile.vue';
@@ -195,6 +197,8 @@ import ReportsPage from './ReportsPage.vue';
 import ConfirmDialog from './ConfirmDialog.vue';
 import DemoModal from './DemoModal.vue';
 import { useSupabase, type ExpenseCategory, type ExpenseDocument } from '../composables/useSupabase';
+
+const router = useRouter();
 
 const CORRECT_PASSCODE = '6231839';
 const AUTH_KEY = 'melkonian_auth';
@@ -263,6 +267,10 @@ const logout = () => {
   isAuthenticated.value = false;
   passcodeInput.value = '';
   passcodeError.value = '';
+};
+
+const goToDemo = () => {
+  router.push('/demo');
 };
 
 const sortedCategories = computed(() => {
@@ -572,6 +580,29 @@ onMounted(() => {
 }
 
 .passcode-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(86, 145, 196, 0.4);
+}
+
+.demo-btn {
+  width: 100%;
+  margin-top: 1rem;
+  padding: 1rem;
+  background: white;
+  color: #5691c4;
+  border: 2px solid #5691c4;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: 'Roboto', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
+}
+
+.demo-btn:hover {
+  background: #5691c4;
+  color: white;
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(86, 145, 196, 0.4);
 }
