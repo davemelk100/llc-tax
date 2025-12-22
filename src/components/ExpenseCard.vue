@@ -25,20 +25,20 @@
           </div>
           <span v-if="doc.amount" class="doc-amount">${{ doc.amount.toFixed(2) }}</span>
           <div class="icon-actions">
-            <a :href="doc.url" target="_blank" rel="noopener noreferrer" class="icon-btn" title="Open in new window">
+            <button @click="$emit('open-document', doc)" class="icon-btn" title="Open in new window">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
                 <polyline points="15 3 21 3 21 9"></polyline>
                 <line x1="10" y1="14" x2="21" y2="3"></line>
               </svg>
-            </a>
-            <a :href="doc.url" :download="doc.title" class="icon-btn" title="Download">
+            </button>
+            <button @click="$emit('download-document', doc)" class="icon-btn" title="Download">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                 <polyline points="7 10 12 15 17 10"></polyline>
                 <line x1="12" y1="15" x2="12" y2="3"></line>
               </svg>
-            </a>
+            </button>
             <button @click="$emit('edit-document', doc)" class="icon-btn" title="Edit">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
