@@ -127,8 +127,8 @@ const editForm = ref({
 
 const demoProfile: CompanyProfile = {
   id: 'demo-profile',
-  company_name: 'Melkonian Industries LLC',
-  filing_number: 'LLC-2019-123456',
+  company_name: 'LLC',
+  filing_number: 'LLC-XXXX-XXXXXX',
   address: '742 Evergreen Terrace, Springfield, IL 62701',
   phone: '(555) 867-5309',
   email: 'contact@melkonianindustries.com',
