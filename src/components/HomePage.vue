@@ -37,7 +37,7 @@
       <template v-else>
         <header class="app-header">
           <div class="header-content">
-            <h1>Melkonian Industries LLC</h1>
+            <h1>LLC</h1>
             <div class="header-actions">
               <button @click="showReports = true" class="reports-btn">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -109,7 +109,7 @@
       </main>
 
       <footer class="app-footer">
-        <p>&copy; {{ currentYear }} Melkonian Industries LLC. All rights reserved.</p>
+        <p>&copy; {{ currentYear }} LLC. All rights reserved.</p>
       </footer>
 
         <div v-if="showEditDialog" class="modal-overlay" @click="closeEditDialog">

@@ -21,7 +21,7 @@
       <header class="app-header">
         <div class="header-content">
           <div class="header-title">
-            <h1>Melkonian Industries LLC</h1>
+            <h1>LLC</h1>
             <span class="demo-label">DEMO</span>
           </div>
           <div class="header-actions">
@@ -107,7 +107,7 @@
       </main>
 
       <footer class="app-footer">
-        <p>&copy; {{ currentYear }} Melkonian Industries LLC. All rights reserved.</p>
+        <p>&copy; {{ currentYear }} LLC. All rights reserved.</p>
       </footer>
 
         <div v-if="showEditDialog" class="modal-overlay" @click="closeEditDialog">
