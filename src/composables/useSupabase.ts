@@ -80,6 +80,13 @@ export const useSupabase = () => {
     });
   };
 
+  const resetPassword = async (email: string) => {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/`,
+    });
+    if (error) throw new Error(error.message);
+  };
+
   const getCategories = async (): Promise<ExpenseCategory[]> => {
     const { data, error } = await supabase
       .from('expense_categories')
@@ -274,6 +281,7 @@ export const useSupabase = () => {
     signOut,
     getSession,
     onAuthStateChange,
+    resetPassword,
     getCategories,
     getDocuments,
     createCategory,

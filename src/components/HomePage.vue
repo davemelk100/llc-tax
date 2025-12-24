@@ -2,8 +2,11 @@
   <div class="app">
     <div v-if="!isAuthenticated" class="passcode-screen">
       <div class="passcode-card">
-        <h2>{{ isSignUpMode ? 'Sign Up' : 'Sign In' }}</h2>
-        <p class="auth-instructions">{{ isSignUpMode ? 'Create an account to access your data' : 'Sign in to access your data' }}</p>
+        <h2>{{ isForgotPasswordMode ? 'Reset Password' : (isSignUpMode ? 'Sign Up' : 'Sign In') }}</h2>
+        <p class="auth-instructions">
+          {{ isForgotPasswordMode ? 'Enter your email to receive a password reset link' :
+             (isSignUpMode ? 'Create an account to access your data' : 'Sign in to access your data') }}
+        </p>
         <div class="form-group">
           <label>EMAIL</label>
           <input
@@ -14,7 +17,7 @@
             @keyup.enter="handleAuth"
           />
         </div>
-        <div class="form-group">
+        <div v-if="!isForgotPasswordMode" class="form-group">
           <label>PASSWORD</label>
           <input
             v-model="authPassword"
@@ -25,9 +28,16 @@
           />
         </div>
         <p v-if="authError" class="auth-error">{{ authError }}</p>
-        <button @click="handleAuth" class="passcode-btn">{{ isSignUpMode ? 'SIGN UP' : 'SIGN IN' }}</button>
+        <p v-if="authSuccess" class="auth-success">{{ authSuccess }}</p>
+        <button @click="handleAuth" class="passcode-btn">
+          {{ isForgotPasswordMode ? 'SEND RESET LINK' : (isSignUpMode ? 'SIGN UP' : 'SIGN IN') }}
+        </button>
+        <button v-if="!isForgotPasswordMode && !isSignUpMode" @click="toggleForgotPassword" class="forgot-password-btn">
+          Forgot password?
+        </button>
         <button @click="toggleAuthMode" class="toggle-mode-btn">
-          {{ isSignUpMode ? 'Already have an account? Sign in' : "Don't have an account? Sign up" }}
+          {{ isForgotPasswordMode ? 'Back to sign in' :
+             (isSignUpMode ? 'Already have an account? Sign in' : "Don't have an account? Sign up") }}
         </button>
       </div>
     </div>
@@ -231,7 +241,9 @@ const demoModal = ref<InstanceType<typeof DemoModal> | null>(null);
 const authEmail = ref('');
 const authPassword = ref('');
 const authError = ref('');
+const authSuccess = ref('');
 const isSignUpMode = ref(false);
+const isForgotPasswordMode = ref(false);
 const editForm = ref({
   category_id: '',
   title: '',
@@ -250,17 +262,27 @@ const checkExistingAuth = async () => {
 };
 
 const handleAuth = async () => {
-  if (!authEmail.value || !authPassword.value) {
-    authError.value = 'Please enter email and password';
+  if (!authEmail.value) {
+    authError.value = 'Please enter your email';
+    return;
+  }
+
+  if (!isForgotPasswordMode.value && !authPassword.value) {
+    authError.value = 'Please enter your password';
     return;
   }
 
   authError.value = '';
+  authSuccess.value = '';
 
   try {
-    if (isSignUpMode.value) {
+    if (isForgotPasswordMode.value) {
+      await supabase.resetPassword(authEmail.value);
+      authSuccess.value = 'Password reset link sent! Check your email.';
+      authEmail.value = '';
+    } else if (isSignUpMode.value) {
       await supabase.signUp(authEmail.value, authPassword.value);
-      authError.value = 'Account created! Please sign in.';
+      authSuccess.value = 'Account created! Please sign in.';
       isSignUpMode.value = false;
       authPassword.value = '';
     } else {
@@ -274,8 +296,19 @@ const handleAuth = async () => {
 };
 
 const toggleAuthMode = () => {
-  isSignUpMode.value = !isSignUpMode.value;
+  if (isForgotPasswordMode.value) {
+    isForgotPasswordMode.value = false;
+  } else {
+    isSignUpMode.value = !isSignUpMode.value;
+  }
   authError.value = '';
+  authSuccess.value = '';
+};
+
+const toggleForgotPassword = () => {
+  isForgotPasswordMode.value = true;
+  authError.value = '';
+  authSuccess.value = '';
 };
 
 const logout = async () => {
@@ -284,6 +317,9 @@ const logout = async () => {
   authEmail.value = '';
   authPassword.value = '';
   authError.value = '';
+  authSuccess.value = '';
+  isSignUpMode.value = false;
+  isForgotPasswordMode.value = false;
 };
 
 const sortedCategories = computed(() => {
@@ -603,6 +639,13 @@ onMounted(async () => {
   font-size: 0.875rem;
 }
 
+.auth-success {
+  color: #2e7d32;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+}
+
 .passcode-btn {
   width: 100%;
   margin-top: 1.5rem;
@@ -622,6 +665,25 @@ onMounted(async () => {
 .passcode-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(86, 145, 196, 0.4);
+}
+
+.forgot-password-btn {
+  width: 100%;
+  margin-top: 0.75rem;
+  padding: 0.5rem;
+  background: transparent;
+  color: #5691c4;
+  border: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  font-family: 'Roboto', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: underline;
+}
+
+.forgot-password-btn:hover {
+  color: #3d6f9e;
 }
 
 .toggle-mode-btn {
