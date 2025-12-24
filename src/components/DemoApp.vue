@@ -55,7 +55,7 @@
               </button>
             </template>
             <template v-else>
-              <button @click="showPasscodeModal = true" class="signin-btn">
+              <button @click="showAuthModal = true" class="signin-btn">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
                   <polyline points="10 17 15 12 10 7"></polyline>
@@ -180,27 +180,42 @@
 
       <DemoModal ref="demoModal" />
 
-      <div v-if="showPasscodeModal" class="modal-overlay" @click="closePasscodeModal">
-        <div class="modal-content passcode-modal" @click.stop>
+      <div v-if="showAuthModal" class="modal-overlay" @click="closeAuthModal">
+        <div class="modal-content auth-modal" @click.stop>
           <div class="modal-header">
-            <h2>Sign In</h2>
-            <button @click="closePasscodeModal" class="close-btn">&times;</button>
+            <h2>{{ isSignUpMode ? 'Sign Up' : 'Sign In' }}</h2>
+            <button @click="closeAuthModal" class="close-btn">&times;</button>
           </div>
           <div class="modal-body">
-            <p class="passcode-instructions">Enter your passcode to access live data</p>
-            <input
-              v-model="passcodeInput"
-              type="password"
-              placeholder="Enter passcode"
-              @keyup.enter="checkPasscode"
-              class="form-input passcode-input"
-              autofocus
-            />
-            <p v-if="passcodeError" class="passcode-error">{{ passcodeError }}</p>
+            <p class="auth-instructions">{{ isSignUpMode ? 'Create an account to access your data' : 'Sign in to access your data' }}</p>
+            <div class="form-group">
+              <label>EMAIL</label>
+              <input
+                v-model="authEmail"
+                type="email"
+                placeholder="Enter your email"
+                class="form-input"
+                @keyup.enter="handleAuth"
+              />
+            </div>
+            <div class="form-group">
+              <label>PASSWORD</label>
+              <input
+                v-model="authPassword"
+                type="password"
+                placeholder="Enter your password"
+                class="form-input"
+                @keyup.enter="handleAuth"
+              />
+            </div>
+            <p v-if="authError" class="auth-error">{{ authError }}</p>
+            <button @click="toggleAuthMode" class="toggle-mode-btn">
+              {{ isSignUpMode ? 'Already have an account? Sign in' : "Don't have an account? Sign up" }}
+            </button>
           </div>
           <div class="modal-footer">
-            <button @click="closePasscodeModal" class="cancel-btn">CANCEL</button>
-            <button @click="checkPasscode" class="save-btn">SIGN IN</button>
+            <button @click="closeAuthModal" class="cancel-btn">CANCEL</button>
+            <button @click="handleAuth" class="save-btn">{{ isSignUpMode ? 'SIGN UP' : 'SIGN IN' }}</button>
           </div>
         </div>
       </div>
@@ -218,9 +233,6 @@ import ConfirmDialog from './ConfirmDialog.vue';
 import DemoModal from './DemoModal.vue';
 import { useSupabase, type ExpenseCategory, type ExpenseDocument } from '../composables/useSupabase';
 
-const CORRECT_PASSCODE = '6742727';
-const AUTH_KEY = 'melkonian_demo_auth';
-
 const supabase = useSupabase();
 const categories = ref<ExpenseCategory[]>([]);
 const documents = ref<ExpenseDocument[]>([]);
@@ -230,9 +242,11 @@ const showAdmin = ref(false);
 const showProfile = ref(false);
 const showReports = ref(false);
 const isAuthenticated = ref(false);
-const passcodeInput = ref('');
-const passcodeError = ref('');
-const showPasscodeModal = ref(false);
+const showAuthModal = ref(false);
+const isSignUpMode = ref(false);
+const authEmail = ref('');
+const authPassword = ref('');
+const authError = ref('');
 const showEditDialog = ref(false);
 const editingDocument = ref<ExpenseDocument | null>(null);
 const isAddMode = ref(false);
@@ -265,49 +279,67 @@ const demoDocuments: ExpenseDocument[] = [
   { id: 'doc-4', category_id: 'demo-3', title: 'Power Drill Purchase', description: 'Dewalt cordless drill', document_type: 'PDF', url: '#', amount: 189.99, date: '2024-03-12', created_at: '', updated_at: '' },
 ];
 
-const checkExistingAuth = () => {
-  const authData = localStorage.getItem(AUTH_KEY);
-  if (authData) {
-    const authDate = new Date(authData);
-    const today = new Date();
-    if (
-      authDate.getFullYear() === today.getFullYear() &&
-      authDate.getMonth() === today.getMonth() &&
-      authDate.getDate() === today.getDate()
-    ) {
+const checkExistingAuth = async () => {
+  try {
+    const session = await supabase.getSession();
+    isAuthenticated.value = !!session;
+  } catch {
+    isAuthenticated.value = false;
+  }
+};
+
+const handleAuth = async () => {
+  authError.value = '';
+
+  if (!authEmail.value.trim() || !authPassword.value.trim()) {
+    authError.value = 'Please enter both email and password';
+    return;
+  }
+
+  try {
+    if (isSignUpMode.value) {
+      await supabase.signUp(authEmail.value, authPassword.value);
+      authError.value = '';
+      showAuthModal.value = false;
       isAuthenticated.value = true;
-      return;
+      authEmail.value = '';
+      authPassword.value = '';
+      loadData();
+    } else {
+      await supabase.signIn(authEmail.value, authPassword.value);
+      authError.value = '';
+      showAuthModal.value = false;
+      isAuthenticated.value = true;
+      authEmail.value = '';
+      authPassword.value = '';
+      loadData();
     }
+  } catch (e: any) {
+    authError.value = e.message || 'Authentication failed';
   }
-  isAuthenticated.value = false;
 };
 
-const checkPasscode = () => {
-  if (passcodeInput.value === CORRECT_PASSCODE) {
-    isAuthenticated.value = true;
-    passcodeError.value = '';
-    localStorage.setItem(AUTH_KEY, new Date().toISOString());
-    showPasscodeModal.value = false;
-    passcodeInput.value = '';
+const toggleAuthMode = () => {
+  isSignUpMode.value = !isSignUpMode.value;
+  authError.value = '';
+};
+
+const closeAuthModal = () => {
+  showAuthModal.value = false;
+  authEmail.value = '';
+  authPassword.value = '';
+  authError.value = '';
+  isSignUpMode.value = false;
+};
+
+const logout = async () => {
+  try {
+    await supabase.signOut();
+    isAuthenticated.value = false;
     loadData();
-  } else {
-    passcodeError.value = 'Incorrect passcode';
-    passcodeInput.value = '';
+  } catch (e: any) {
+    alert('Failed to sign out: ' + (e.message || 'Unknown error'));
   }
-};
-
-const closePasscodeModal = () => {
-  showPasscodeModal.value = false;
-  passcodeInput.value = '';
-  passcodeError.value = '';
-};
-
-const logout = () => {
-  localStorage.removeItem(AUTH_KEY);
-  isAuthenticated.value = false;
-  passcodeInput.value = '';
-  passcodeError.value = '';
-  loadData();
 };
 
 const sortedCategories = computed(() => {
@@ -502,9 +534,16 @@ const handleDownloadDocument = () => {
   }
 };
 
-onMounted(() => {
-  checkExistingAuth();
+onMounted(async () => {
+  await checkExistingAuth();
   loadData();
+
+  supabase.onAuthStateChange((event, session) => {
+    isAuthenticated.value = !!session;
+    if (event === 'SIGNED_OUT') {
+      loadData();
+    }
+  });
 });
 </script>
 
@@ -619,75 +658,6 @@ onMounted(() => {
 
 .signin-btn:hover {
   background: rgba(255, 255, 255, 0.3);
-}
-
-.passcode-screen {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-}
-
-.passcode-card {
-  background: white;
-  border-radius: 16px;
-  padding: 3rem;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-  width: 100%;
-  max-width: 400px;
-  text-align: center;
-  position: relative;
-}
-
-.passcode-card h2 {
-  margin-bottom: 2rem;
-  color: #3d6f9e;
-  font-size: 1.75rem;
-}
-
-.passcode-input {
-  width: 100%;
-  padding: 1rem;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 1.125rem;
-  font-family: 'Roboto', sans-serif;
-  transition: border-color 0.2s;
-  text-align: center;
-  letter-spacing: 0.25rem;
-}
-
-.passcode-input:focus {
-  outline: none;
-  border-color: #5691c4;
-}
-
-.passcode-error {
-  color: #d32f2f;
-  margin-top: 1rem;
-  font-size: 0.875rem;
-}
-
-.passcode-btn {
-  width: 100%;
-  margin-top: 1.5rem;
-  padding: 1rem;
-  background: linear-gradient(135deg, #5691c4 0%, #3d6f9e 100%);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 1.125rem;
-  font-weight: 600;
-  font-family: 'Roboto', sans-serif;
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-  text-transform: uppercase;
-}
-
-.passcode-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(86, 145, 196, 0.4);
 }
 
 .app-main {
@@ -908,14 +878,6 @@ onMounted(() => {
   .save-btn {
     width: 100%;
   }
-
-  .passcode-card {
-    padding: 2rem 1.5rem;
-  }
-
-  .passcode-card h2 {
-    font-size: 1.5rem;
-  }
 }
 
 .modal-overlay {
@@ -1079,20 +1041,40 @@ onMounted(() => {
   box-shadow: 0 6px 20px rgba(86, 145, 196, 0.4);
 }
 
-.passcode-modal {
-  max-width: 400px;
+.auth-modal {
+  max-width: 450px;
 }
 
-.passcode-instructions {
-  margin-bottom: 1rem;
+.auth-instructions {
+  margin-bottom: 1.5rem;
   color: #666;
   text-align: center;
   font-size: 0.95rem;
 }
 
-.passcode-input {
+.auth-error {
+  color: #d32f2f;
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
   text-align: center;
-  letter-spacing: 0.25rem;
-  font-size: 1.125rem;
+}
+
+.toggle-mode-btn {
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.5rem;
+  background: transparent;
+  color: #5691c4;
+  border: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s;
+  text-align: center;
+}
+
+.toggle-mode-btn:hover {
+  color: #3d6f9e;
+  text-decoration: underline;
 }
 </style>

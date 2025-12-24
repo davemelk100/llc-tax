@@ -43,6 +43,43 @@ export interface CompanyProfile {
 }
 
 export const useSupabase = () => {
+  const signUp = async (email: string, password: string) => {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+    if (error) throw new Error(error.message);
+    return data;
+  };
+
+  const signIn = async (email: string, password: string) => {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    if (error) throw new Error(error.message);
+    return data;
+  };
+
+  const signOut = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) throw new Error(error.message);
+  };
+
+  const getSession = async () => {
+    const { data: { session }, error } = await supabase.auth.getSession();
+    if (error) throw new Error(error.message);
+    return session;
+  };
+
+  const onAuthStateChange = (callback: (event: string, session: any) => void) => {
+    return supabase.auth.onAuthStateChange((event, session) => {
+      (async () => {
+        callback(event, session);
+      })();
+    });
+  };
+
   const getCategories = async (): Promise<ExpenseCategory[]> => {
     const { data, error } = await supabase
       .from('expense_categories')
@@ -232,6 +269,11 @@ export const useSupabase = () => {
   };
 
   return {
+    signUp,
+    signIn,
+    signOut,
+    getSession,
+    onAuthStateChange,
     getCategories,
     getDocuments,
     createCategory,
