@@ -2,18 +2,33 @@
   <div class="app">
     <div v-if="!isAuthenticated" class="passcode-screen">
       <div class="passcode-card">
-        <h2>Enter Passcode</h2>
-        <input
-          v-model="passcodeInput"
-          type="password"
-          placeholder="Enter passcode"
-          @keyup.enter="checkPasscode"
-          class="passcode-input"
-          autofocus
-        />
-        <p v-if="passcodeError" class="passcode-error">{{ passcodeError }}</p>
-        <button @click="checkPasscode" class="passcode-btn">Submit</button>
-        <button @click="goToDemo" class="demo-btn">View Demo</button>
+        <h2>{{ isSignUpMode ? 'Sign Up' : 'Sign In' }}</h2>
+        <p class="auth-instructions">{{ isSignUpMode ? 'Create an account to access your data' : 'Sign in to access your data' }}</p>
+        <div class="form-group">
+          <label>EMAIL</label>
+          <input
+            v-model="authEmail"
+            type="email"
+            placeholder="Enter your email"
+            class="form-input"
+            @keyup.enter="handleAuth"
+          />
+        </div>
+        <div class="form-group">
+          <label>PASSWORD</label>
+          <input
+            v-model="authPassword"
+            type="password"
+            placeholder="Enter your password"
+            class="form-input"
+            @keyup.enter="handleAuth"
+          />
+        </div>
+        <p v-if="authError" class="auth-error">{{ authError }}</p>
+        <button @click="handleAuth" class="passcode-btn">{{ isSignUpMode ? 'SIGN UP' : 'SIGN IN' }}</button>
+        <button @click="toggleAuthMode" class="toggle-mode-btn">
+          {{ isSignUpMode ? 'Already have an account? Sign in' : "Don't have an account? Sign up" }}
+        </button>
       </div>
     </div>
 
@@ -189,7 +204,6 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
 import ExpenseCard from './ExpenseCard.vue';
 import AdminPanel from './admin/AdminPanel.vue';
 import CompanyProfile from './CompanyProfile.vue';
@@ -197,11 +211,6 @@ import ReportsPage from './ReportsPage.vue';
 import ConfirmDialog from './ConfirmDialog.vue';
 import DemoModal from './DemoModal.vue';
 import { useSupabase, type ExpenseCategory, type ExpenseDocument } from '../composables/useSupabase';
-
-const router = useRouter();
-
-const CORRECT_PASSCODE = '6231839';
-const AUTH_KEY = 'melkonian_auth';
 
 const supabase = useSupabase();
 const categories = ref<ExpenseCategory[]>([]);
@@ -212,8 +221,6 @@ const showAdmin = ref(false);
 const showProfile = ref(false);
 const showReports = ref(false);
 const isAuthenticated = ref(false);
-const passcodeInput = ref('');
-const passcodeError = ref('');
 const showEditDialog = ref(false);
 const editingDocument = ref<ExpenseDocument | null>(null);
 const isAddMode = ref(false);
@@ -221,6 +228,10 @@ const selectedFile = ref<File | null>(null);
 const saving = ref(false);
 const confirmDialog = ref<InstanceType<typeof ConfirmDialog> | null>(null);
 const demoModal = ref<InstanceType<typeof DemoModal> | null>(null);
+const authEmail = ref('');
+const authPassword = ref('');
+const authError = ref('');
+const isSignUpMode = ref(false);
 const editForm = ref({
   category_id: '',
   title: '',
@@ -233,44 +244,46 @@ const editForm = ref({
 
 const currentYear = new Date().getFullYear();
 
-const checkExistingAuth = () => {
-  const authData = localStorage.getItem(AUTH_KEY);
-  if (authData) {
-    const authDate = new Date(authData);
-    const today = new Date();
-    if (
-      authDate.getFullYear() === today.getFullYear() &&
-      authDate.getMonth() === today.getMonth() &&
-      authDate.getDate() === today.getDate()
-    ) {
+const checkExistingAuth = async () => {
+  const session = await supabase.getSession();
+  isAuthenticated.value = !!session;
+};
+
+const handleAuth = async () => {
+  if (!authEmail.value || !authPassword.value) {
+    authError.value = 'Please enter email and password';
+    return;
+  }
+
+  authError.value = '';
+
+  try {
+    if (isSignUpMode.value) {
+      await supabase.signUp(authEmail.value, authPassword.value);
+      authError.value = 'Account created! Please sign in.';
+      isSignUpMode.value = false;
+      authPassword.value = '';
+    } else {
+      await supabase.signIn(authEmail.value, authPassword.value);
       isAuthenticated.value = true;
-      return;
+      loadData();
     }
-  }
-  isAuthenticated.value = false;
-};
-
-const checkPasscode = () => {
-  if (passcodeInput.value === CORRECT_PASSCODE) {
-    isAuthenticated.value = true;
-    passcodeError.value = '';
-    localStorage.setItem(AUTH_KEY, new Date().toISOString());
-    loadData();
-  } else {
-    passcodeError.value = 'Incorrect passcode';
-    passcodeInput.value = '';
+  } catch (e: any) {
+    authError.value = e.message || 'Authentication failed';
   }
 };
 
-const logout = () => {
-  localStorage.removeItem(AUTH_KEY);
-  isAuthenticated.value = false;
-  passcodeInput.value = '';
-  passcodeError.value = '';
+const toggleAuthMode = () => {
+  isSignUpMode.value = !isSignUpMode.value;
+  authError.value = '';
 };
 
-const goToDemo = () => {
-  router.push('/demo');
+const logout = async () => {
+  await supabase.signOut();
+  isAuthenticated.value = false;
+  authEmail.value = '';
+  authPassword.value = '';
+  authError.value = '';
 };
 
 const sortedCategories = computed(() => {
@@ -438,11 +451,18 @@ const handleDownloadDocument = () => {
   }
 };
 
-onMounted(() => {
-  checkExistingAuth();
+onMounted(async () => {
+  await checkExistingAuth();
   if (isAuthenticated.value) {
     loadData();
   }
+
+  supabase.onAuthStateChange((_event, session) => {
+    isAuthenticated.value = !!session;
+    if (session) {
+      loadData();
+    }
+  });
 });
 </script>
 
@@ -535,31 +555,51 @@ onMounted(() => {
 }
 
 .passcode-card h2 {
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   color: #3d6f9e;
   font-size: 1.75rem;
 }
 
-.passcode-input {
-  width: 100%;
-  padding: 1rem;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 1.125rem;
-  font-family: 'Roboto', sans-serif;
-  transition: border-color 0.2s;
-  text-align: center;
-  letter-spacing: 0.25rem;
+.auth-instructions {
+  color: #666;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
 }
 
-.passcode-input:focus {
+.form-group {
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-weight: 700;
+  color: #3d6f9e;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.875rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: 'Roboto', sans-serif;
+  transition: border-color 0.2s;
+}
+
+.form-input:focus {
   outline: none;
   border-color: #5691c4;
 }
 
-.passcode-error {
+.auth-error {
   color: #d32f2f;
   margin-top: 1rem;
+  margin-bottom: 1rem;
   font-size: 0.875rem;
 }
 
@@ -584,27 +624,23 @@ onMounted(() => {
   box-shadow: 0 6px 20px rgba(86, 145, 196, 0.4);
 }
 
-.demo-btn {
+.toggle-mode-btn {
   width: 100%;
   margin-top: 1rem;
-  padding: 1rem;
-  background: white;
+  padding: 0.75rem;
+  background: transparent;
   color: #5691c4;
-  border: 2px solid #5691c4;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 600;
+  border: none;
+  font-size: 0.9rem;
+  font-weight: 500;
   font-family: 'Roboto', sans-serif;
   cursor: pointer;
   transition: all 0.2s;
-  text-transform: uppercase;
+  text-decoration: underline;
 }
 
-.demo-btn:hover {
-  background: #5691c4;
-  color: white;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(86, 145, 196, 0.4);
+.toggle-mode-btn:hover {
+  color: #3d6f9e;
 }
 
 .app-main {
